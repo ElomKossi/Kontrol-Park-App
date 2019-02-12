@@ -1,0 +1,806 @@
+﻿@using System.Diagnostics
+@using System.Linq
+@using APP.Areas.Administraton.Models
+@model APP.Areas.Administraton.Models.AdminViewModel
+
+@{
+    ViewBag.Title = "Administration";
+    //if (Model.utilisateur != null && Model.utilisateur.Count != 0)
+    //{
+    //    if (Model.utilisateur.Count == 1)
+    //    {
+    //        Model.UserActif = Model.utilisateur.First();
+
+    //        ViewBag.comptesB = 0;
+    //    }
+    //    else
+    //    {
+    //        foreach (var VARIABLE in Model.utilisateur)
+    //        {
+    //            if (VARIABLE.EnActivite == true)
+    //            {
+    //                Model.UtilisateursActifs.Add(VARIABLE);
+
+    //            }
+    //        }
+
+    //        ViewBag.comptesB = Model.utilisateur.Count - Model.UtilisateursActifs.Count;
+    //    }
+    //}
+}
+
+<br>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Gestion de la Sécurité (Droits & Profils)</h2>
+        @*<ol class="breadcrumb">
+                <li>
+                    <a href="@Url.Action("Index", "Admin")">Home</a>
+                </li>
+                <li>
+                    <a>Administration</a>
+                </li>
+                <li class="active">
+                    <strong>Utilisateur</strong>
+                </li>
+            </ol>*@
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="widget style1 navy-bg">
+                <div class="row vertical-align">
+                    <div class="col-xs-3">
+                        <i class="fa fa-users fa-3x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        @{
+                            if (Model.droit == null)
+                            {
+                                <h2 class="font-bold">0</h2>
+                            }
+                            else
+                            {
+                                <h2 class="font-bold">@Model.droit.Count()</h2>
+                            }
+                        }
+                        <span>Droits</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="widget style1 navy-bg">
+                    <div class="row vertical-align">
+                        <div class="col-xs-3">
+                            <i class="fa fa-users fa-3x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            @{
+                                if (Model.profil == null)
+                                {
+                                    <h2 class="font-bold">0</h2>
+                                }
+                                else
+                                {
+                                    <h2 class="font-bold">@Model.profil.Count()</h2>
+                                }
+                            }
+                            <span>Profil</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class=" col-lg-12">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-2"><i class="fa fa-dot-circle-o"></i> Droits</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-badge"></i> Profils</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div id="tab-2" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-lg-offset-4 col-lg-4">
+                                        <h4>Ajouter un droit</h4>
+                                        @using (Html.BeginForm("AjouterDroit", "Security", new { area = "Administraton" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                                        {
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Libellé</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" id="LibelleDroit" name="LibelleDroit" placeholder="Libellé" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-8 col-sm-offset-4">
+                                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-offset-1 col-lg-10">
+                                        <h4>Les Droits disponibles</h4>
+                                        <hr>
+                                        <div class="col-lg-offset-7 col-lg-5">
+                                            <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                                   placeholder="Rechercher">
+                                        </div>
+                                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        @Html.DisplayName("Id")
+                                                    </th>
+                                                    <th>
+                                                        Droit
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.droit.OrderByDescending(x => x.IdDroit))
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.IdDroit)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.LibelleDroit)
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-white btn-xs" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdDroit)">
+                                                                Modifier
+                                                            </a>
+                                                            @{
+                                                                if (item.ActifDroit == false || item.ActifDroit == null)
+                                                                {
+                                                                    <a class="btn btn-white btn-xs" href="/Administraton/Security/EtatDroit/@item.IdDroit">
+                                                                        Activer
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="btn btn-white btn-xs" href="/Administraton/Security/EtatDroit/@item.IdDroit">
+                                                                        Désactiver
+                                                                    </a>
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <ul class="pagination pull-right"></ul>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="col-lg-offset-4 col-lg-4">
+                                        <h4>Ajouter un profil</h4>
+                                        @using (Html.BeginForm("AjouterProfil", "Security", new { area = "Administraton" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                                        {
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Profil</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" id="LibelleProfil" name="LibelleProfil" placeholder="Profil" class="form-control">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-sm-2 control-label">Droits</label>
+                                                    <div class="col-sm-10">
+                                                        <select data-placeholder="Choisir les droit..." name="idDroits" class="chosen-select form-control" multiple tabindex="4">
+                                                            @{
+                                                                foreach (var catp in Model.droit)
+                                                                {
+                                                                    <option value="@catp.IdDroit">@catp.LibelleDroit</option>
+                                                                }
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-8 col-sm-offset-4">
+                                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                                </div>
+                                            </div>
+                                                                }
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-offset-1 col-lg-10">
+                                        <h4>Les Profils disponibles</h4>
+                                        <hr>
+                                        <div class="col-lg-offset-7 col-lg-5">
+                                            <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                                   placeholder="Rechercher">
+                                        </div>
+                                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        @Html.DisplayName("Id")
+                                                    </th>
+                                                    <th>
+                                                        Profil
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model.profil.OrderByDescending(x => x.IdProfil))
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.IdProfil)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item.LibelleProfil)
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-white btn-xs" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdProfil)">
+                                                                Modofoer
+                                                            </a>
+                                                            <a class="btn btn-white btn-xs" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdProfil)">
+                                                                Détails
+                                                            </a>
+                                                            @{
+                                                                if (item.ActifProfil == false || item.ActifProfil == null)
+                                                                {
+                                                                    <a class="btn btn-white btn-bitbucket" href="/Administration/Security/EtatProfil/@item.IdProfil">
+                                                                        Activer
+                                                                    </a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a class="btn btn-white btn-bitbucket" href="/Administration/Security/EtatProfil/@item.IdProfil">
+                                                                        Désactiver
+                                                                    </a>
+                                                                }
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                                }
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="10">
+                                                        <ul class="pagination pull-right"></ul>
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.droit != null, "Model.droit != null");
+    foreach (var tmp in Model.droit)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdDroit" tabindex="@tmp.IdDroit" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier un droit</h4>
+                    </div>
+                    @using (Html.BeginForm("EditDroit", "Security", new { area = "Administraton" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="IdDroit" name="IdDroit" placeholder="ID" class="form-control" value="@tmp.IdDroit">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Libellé</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" id="LibelleDroit" name="LibelleDroit" placeholder="Libellé" class="form-control " value="@tmp.LibelleDroit">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@{
+    Debug.Assert(Model.droit != null, "Model.droit != null");
+    foreach (var tmp in Model.profil)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdProfil" tabindex="@tmp.IdProfil" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier un droit</h4>
+                    </div>
+                    @using (Html.BeginForm("EditDroit", "Security", new { area = "Administraton" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="IdDroit" name="IdDroit" placeholder="ID" class="form-control" value="@tmp.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Libellé</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" id="LibelleDroit" name="LibelleDroit" placeholder="Libellé" class="form-control " value="@tmp.LibelleProfil">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Droits</label>
+                                <div class="col-sm-10">
+                                    <select data-placeholder="Choisir les droit..." name="idDroits" class="chosen-select form-control" multiple tabindex="4">
+                                        @{
+                                            foreach (var catp in Model.avoirDroit)
+                                            {
+                                                if (catp.IdProfil == tmp.IdProfil)
+                                                {
+                                                    <option selected="selected" value="@catp.IdDroitProfil">@catp.Droit.LibelleDroit</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@catp.IdDroitProfil">@catp.Droit.LibelleDroit</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                                            }
+                </div>
+            </div>
+        </div>
+                                            }
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/footableStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+
+    @Scripts.Render("~/plugins/iCheck")
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+    @Scripts.Render("~/plugins/footable")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var $image = $(".image-crop > img")
+            $($image).cropper({
+                aspectRatio: 1.618,
+                preview: ".img-preview",
+                done: function (data) {
+                    // Output the result data for cropping image.
+                }
+            });
+
+            var $inputImage = $("#inputImage");
+            if (window.FileReader) {
+                $inputImage.change(function () {
+                    var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+
+                    if (!files.length) {
+                        return;
+                    }
+
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $inputImage.val("");
+                            $image.cropper("reset", true).cropper("replace", this.result);
+                        };
+                    } else {
+                        showMessage("Please choose an image file.");
+                    }
+                });
+            } else {
+                $inputImage.addClass("hide");
+            }
+
+            $("#download").click(function () {
+                window.open($image.cropper("getDataURL"));
+            });
+
+            $("#zoomIn").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
+
+            $("#zoomOut").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+
+            $("#rotateLeft").click(function () {
+                $image.cropper("rotate", 45);
+            });
+
+            $("#rotateRight").click(function () {
+                $image.cropper("rotate", -45);
+            });
+
+            $("#setDrag").click(function () {
+                $image.cropper("setDragMode", "crop");
+            });
+
+            $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+
+            $('#data_2 .input-group.date').datepicker({
+                startView: 1,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_3 .input-group.date').datepicker({
+                startView: 2,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_4 .input-group.date').datepicker({
+                minViewMode: 1,
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $('#data_5 .input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            var elem = document.querySelector('.js-switch');
+            var switchery = new Switchery(elem, { color: '#1AB394' });
+
+            var elem_2 = document.querySelector('.js-switch_2');
+            var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+            var elem_3 = document.querySelector('.js-switch_3');
+            var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+            var elem_4 = document.querySelector('.js-switch_4');
+            var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+            switchery_4.disable();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.demo1').colorpicker();
+
+            var divStyle = $('.back-change')[0].style;
+            $('#demo_apidemo').colorpicker({
+                color: divStyle.backgroundColor
+            }).on('changeColor', function (ev) {
+                divStyle.backgroundColor = ev.color.toHex();
+            });
+
+            $('.clockpicker').clockpicker();
+
+            $('input[name="daterange"]').daterangepicker();
+
+            $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+            $('#reportrange').daterangepicker({
+                format: 'DD/MM/YYYY',
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment(),
+                minDate: '01/01/2012',
+                maxDate: '31/12/2015',
+                dateLimit: { days: 60 },
+                showDropdowns: true,
+                showWeekNumbers: true,
+                timePicker: false,
+                timePickerIncrement: 1,
+                timePicker12Hour: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'right',
+                drops: 'down',
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-primary',
+                cancelClass: 'btn-default',
+                separator: ' to ',
+                locale: {
+                    applyLabel: 'Submit',
+                    cancelLabel: 'Cancel',
+                    fromLabel: 'From',
+                    toLabel: 'To',
+                    customRangeLabel: 'Custom',
+                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    firstDay: 1
+                }
+            }, function (start, end, label) {
+                console.log(start.toISOString(), end.toISOString(), label);
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            });
+
+
+            $(".select2_demo_1").select2();
+            $(".select2_demo_2").select2();
+            $(".select2_demo_3").select2({
+                placeholder: "Select a state",
+                allowClear: true
+            });
+
+            $(".touchspin1").TouchSpin({
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin2").TouchSpin({
+                min: 0,
+                max: 100,
+                step: 0.1,
+                decimals: 2,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: '%',
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin3").TouchSpin({
+                verticalbuttons: true,
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+            $('.dual_select').bootstrapDualListbox({
+                selectorMinimalHeight: 160
+            });
+
+
+        });
+
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $("#ionrange_1").ionRangeSlider({
+            min: 0,
+            max: 5000,
+            type: 'double',
+            prefix: "$",
+            maxPostfix: "+",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_2").ionRangeSlider({
+            min: 0,
+            max: 10,
+            type: 'single',
+            step: 0.1,
+            postfix: " carats",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_3").ionRangeSlider({
+            min: -50,
+            max: 50,
+            from: 0,
+            postfix: "°",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_4").ionRangeSlider({
+            values: [
+                "January", "February", "March",
+                "April", "May", "June",
+                "July", "August", "September",
+                "October", "November", "December"
+            ],
+            type: 'single',
+            hasGrid: true
+        });
+
+        $("#ionrange_5").ionRangeSlider({
+            min: 10000,
+            max: 100000,
+            step: 100,
+            postfix: " km",
+            from: 55000,
+            hideMinMax: true,
+            hideFromTo: false
+        });
+
+        $(".dial").knob();
+
+        $("#basic_slider").noUiSlider({
+            start: 40,
+            behaviour: 'tap',
+            connect: 'upper',
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#range_slider").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#drag-fixed").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag-fixed',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+    </script>
+
+    @*@Scripts.Render("~/bundles/jqueryui")*@
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#form").validate({
+                rules: {
+                    MotDePasse: {
+                        required: true,
+                        minlength: 3
+                    },
+                    MotDePasse1: {
+                        required: true,
+                        minlength: 3,
+                        equalTo: "#MotDePasse"
+                    },
+                    NumCNIUser: {
+                        required: true,
+                    },
+                    NomUser: {
+                        required: true,
+                    },
+                    PrenomUser: {
+                        required: true,
+                    },
+                    DateNaissanceUser: {
+                        required: true,
+                    },
+                    LieuxNaissanceUser: {
+                        required: true,
+                    },
+                    AdresseUser: {
+                        required: true,
+                    },
+                    TelUser: {
+                        required: true,
+                    },
+                    EmailUser: {
+                        required: true,
+                    },
+                    DateEmbaucheUser: {
+                        required: true,
+                    },
+                    DateNaissanceUser: {
+                        required: true,
+                    },
+                    Identifiant: {
+                        required: true,
+                    }
+                }
+            });
+
+        });
+    </script>
+}

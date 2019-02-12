@@ -1,0 +1,52 @@
+﻿@model IEnumerable<DAL.Affectation>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAffectation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Conducteur.NumCNIConducteur)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Mission.LibelleMission)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vehicule.NomVehicule)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateAffectation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Conducteur.NumCNIConducteur)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Mission.LibelleMission)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vehicule.NomVehicule)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdAffectation }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdAffectation }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdAffectation })
+        </td>
+    </tr>
+}
+
+</table>

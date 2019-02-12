@@ -1,0 +1,50 @@
+﻿@model DAL.Affectation
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Affectation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateAffectation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateAffectation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Conducteur.NumCNIConducteur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Conducteur.NumCNIConducteur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mission.LibelleMission)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mission.LibelleMission)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicule.NomVehicule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vehicule.NomVehicule)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdAffectation }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

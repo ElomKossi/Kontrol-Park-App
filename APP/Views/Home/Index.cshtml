@@ -1,0 +1,344 @@
+﻿@model APP.Models.ViewsModels
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Acceuil";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="row">
+            <div class="text text-center">
+                <div class="jumbotron">
+                    <div class="text-center">
+                        <h1 class="logo-name">KP</h1>
+                    </div>
+                    <h3>Bienvenue dans votre application Kontrol Park</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @*<div class="col-sm-4">
+                <div class="ibox">
+                    <div class="ibox-content">
+                        @{
+                            if (Model.vehicule == null)
+                            {
+                                <h1 class="m-b-xs">0</h1>
+                            }
+                            else
+                            {
+                                <h1 class="m-b-xs">@Model.vehicule.Count()</h1>
+                            }
+                        }
+                        <small>
+                            Véhicules
+                        </small>
+                        <div id="sparkline1" class="m-b-sm"></div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <small class="stats-label">Véhicules en mission</small>
+                                @{
+                                    if (Model.vehicule.Where(p => p.EnMission == true) == null)
+                                    {
+                                        <h4 class="m-b-xs">0</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnMission == true).Count()</h4>
+                                    }
+                                }
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">Véhicules sans mission</small>
+                                @{
+                                    if (Model.vehicule.Where(p => p.EnMission == false) == null)
+                                    {
+                                        <h4 class="m-b-xs">0</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnMission == false).Count()</h4>
+                                    }
+                                }
+                            </div>
+                            <div class="col-xs-4">
+                                <small class="stats-label">Véhicules en panne</small>
+                                @{
+                                    if (Model.vehicule.Where(p => p.EnActivite == false) == null)
+                                    {
+                                        <h4 class="m-b-xs">0</h4>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnActivite == false).Count()</h4>
+                                    } 
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+            <div class="col-sm-4">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-briefcase fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Missions </span>
+                            @{
+                                if (Model.mission == null)
+                                {
+                                    <h2 class="font-bold">0</h2>
+                                }
+                                else
+                                {
+                                    <h2 class="font-bold">@Model.mission.Count()</h2>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <small class="stats-label">Missions encours</small>
+                            @{
+                                if (Model.mission.Where(p => p.Cloturer == true) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnMission == true).Count()</h4>
+                                }
+                            }
+                        </div>
+                        <div class="col-xs-6">
+                            <small class="stats-label">Missions clôturée</small>
+                            @{
+                                if (Model.mission.Where(p => p.Cloturer == false) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.mission.Where(p => p.Cloturer == false).Count()</h4>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-car fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Véhicules </span>
+                            @{
+                                if (Model.vehicule == null)
+                                {
+                                    <h2 class="font-bold">0</h2>
+                                }
+                                else
+                                {
+                                    <h2 class="font-bold">@Model.vehicule.Count()</h2>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <small class="stats-label">Véhicules en mission</small>
+                            @{
+                                if (Model.vehicule.Where(p => p.EnMission == true) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnMission == true).Count()</h4>
+                                }
+                            }
+                        </div>
+                        <div class="col-xs-4">
+                            <small class="stats-label">Véhicules sans mission</small>
+                            @{
+                                if (Model.vehicule.Where(p => p.EnMission == false) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnMission == false).Count()</h4>
+                                }
+                            }
+                        </div>
+                        <div class="col-xs-4">
+                            <small class="stats-label">Véhicules en panne</small>
+                            @{
+                                if (Model.vehicule.Where(p => p.EnActivite == false) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.vehicule.Where(p => p.EnActivite == false).Count()</h4>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="widget style1 navy-bg">
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <i class="fa fa-id-badge fa-5x"></i>
+                        </div>
+                        <div class="col-xs-8 text-right">
+                            <span> Véhicules </span>
+                            @{
+                                if (Model.conducteur == null)
+                                {
+                                    <h2 class="font-bold">0</h2>
+                                }
+                                else
+                                {
+                                    <h2 class="font-bold">@Model.conducteur.Count()</h2>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <small class="stats-label">Conducteurs en mission</small>
+                            @{
+                                if (Model.conducteur.Where(p => p.EnMission == true) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.conducteur.Where(p => p.EnMission == true).Count()</h4>
+                                }
+                            }
+                        </div>
+                        <div class="col-xs-6">
+                            <small class="stats-label">Conducteurs sans mission</small>
+                            @{
+                                if (Model.conducteur.Where(p => p.EnMission == false) == null)
+                                {
+                                    <h4 class="m-b-xs">0</h4>
+                                }
+                                else
+                                {
+                                    <h4 class="m-b-xs">@Model.conducteur.Where(p => p.EnMission == false).Count()</h4>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/plugins/sparkLine")
+    @Scripts.Render("~/plugins/flot")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var sparklineCharts = function () {
+                $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
+                    type: 'line',
+                    width: '100%',
+                    height: '50',
+                    lineColor: '#1ab394',
+                    fillColor: "transparent"
+                });
+
+                $("#sparkline2").sparkline([32, 11, 25, 37, 41, 32, 34, 42], {
+                    type: 'line',
+                    width: '100%',
+                    height: '50',
+                    lineColor: '#1ab394',
+                    fillColor: "transparent"
+                });
+
+                $("#sparkline3").sparkline([34, 22, 24, 41, 10, 18, 16, 8], {
+                    type: 'line',
+                    width: '100%',
+                    height: '50',
+                    lineColor: '#1C84C6',
+                    fillColor: "transparent"
+                });
+            };
+
+            var sparkResize;
+
+            $(window).resize(function (e) {
+                clearTimeout(sparkResize);
+                sparkResize = setTimeout(sparklineCharts, 500);
+            });
+
+            sparklineCharts();
+
+
+
+
+            var data1 = [
+                [0, 4], [1, 8], [2, 5], [3, 10], [4, 4], [5, 16], [6, 5], [7, 11], [8, 6], [9, 11], [10, 20], [11, 10], [12, 13], [13, 4], [14, 7], [15, 8], [16, 12]
+            ];
+            var data2 = [
+                [0, 0], [1, 2], [2, 7], [3, 4], [4, 11], [5, 4], [6, 2], [7, 5], [8, 11], [9, 5], [10, 4], [11, 1], [12, 5], [13, 2], [14, 5], [15, 2], [16, 0]
+            ];
+            $("#flot-dashboard5-chart").length && $.plot($("#flot-dashboard5-chart"), [
+                        data1, data2
+            ],
+                    {
+                        series: {
+                            lines: {
+                                show: false,
+                                fill: true
+                            },
+                            splines: {
+                                show: true,
+                                tension: 0.4,
+                                lineWidth: 1,
+                                fill: 0.4
+                            },
+                            points: {
+                                radius: 0,
+                                show: true
+                            },
+                            shadowSize: 2
+                        },
+                        grid: {
+                            hoverable: true,
+                            clickable: true,
+
+                            borderWidth: 2,
+                            color: 'transparent'
+                        },
+                        colors: ["#1ab394", "#1C84C6"],
+                        xaxis: {
+                        },
+                        yaxis: {
+                        },
+                        tooltip: false
+                    }
+            );
+
+
+        });
+    </script>
+}

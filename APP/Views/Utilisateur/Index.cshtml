@@ -1,0 +1,152 @@
+﻿@model APP.Models.UserViewModel
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Paramètre";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h1 class="panel-title">
+                            <span class="h3 text-center">Paramètres du comptes</span>
+                        </h1>
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("parametre", "Utilisateur", FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                        {
+                            <div class="form-group">
+                                @*<label for="text" class="col-xs-4 control-label">numéro Utilisateur:</label>*@
+                                <div class="col-xs-8">
+                                    <input autocomplete="off" autofocus="autofocus" class="form-control sui-accordion-disabled" id="IdUser" name="IdUser" value="@Model.User.IdUser" required type="hidden">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="text" class="col-xs-4 control-label">Identifiant:</label>
+                                <div class="col-xs-8">
+                                    <input autocomplete="off" autofocus="autofocus" class="form-control" id="Identifiant" name="Identifiant" placeholder="Identifiant" value="@Model.User.Identifiant" required type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="text" class="col-xs-4 control-label">Mail:</label>
+                                <div class="col-xs-8">
+                                    <input autocomplete="off" type="email" class="form-control" placeholder="Email" value="@Model.User.EmailUser" name="EmailUser" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="text" class="col-xs-4 control-label">Telephone:</label>
+                                <div class="col-xs-8">
+                                    <input autocomplete="off" type="tel" class="form-control" placeholder="Telephone" value="@Model.User.TelUser" name="TelUser" required autofocus>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4 control-label">Profil:</label>
+                                <div class="col-xs-8">
+                                    <input disabled value="@Model.User.Profil.LibelleProfil" class="form-control sui-accordion-disabled">
+                                </div>
+                            </div>
+                            <div class="col-xs-6"></div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Valider </button>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                @RenderPage("Motdepasse.cshtml");
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#form").validate({
+                    rules: {
+                        MotDePasse: {
+                            required: true,
+                            minlength: 3
+                        },
+                        MotDePasse1: {
+                            required: true,
+                            minlength: 3,
+                            equalTo: "#MotDePasse"
+                        },
+                        NumCNIUser: {
+                            required: true,
+                        },
+                        NomUser: {
+                            required: true,
+                        },
+                        PrenomUser: {
+                            required: true,
+                        },
+                        DateNaissanceUser: {
+                            required: true,
+                        },
+                        LieuxNaissanceUser: {
+                            required: true,
+                        },
+                        AdresseUser: {
+                            required: true,
+                        },
+                        TelUser: {
+                            required: true,
+                        },
+                        EmailUser: {
+                            required: true,
+                        },
+                        DateEmbaucheUser: {
+                            required: true,
+                        },
+                        DateNaissanceUser: {
+                            required: true,
+                        },
+                        Identifiant: {
+                            required: true,
+                        }
+                    }
+                });
+
+            });
+    </script>
+
+    @*<script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#form1").validate({
+                rules: {
+                    motdepasse: {
+                        required: true,
+                        minlength: 3
+                    },
+                    motdepasse1: {
+                        required: true,
+                        minlength: 3,
+                        equalTo: "#MotDePasse"
+                    },
+                    Confirmer: {
+                        required: true,
+                    }
+                }
+            });
+
+        });
+    </script>*@
+}
+

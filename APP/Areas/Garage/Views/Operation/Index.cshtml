@@ -1,0 +1,106 @@
+﻿@model APP.Areas.Garage.Models.AllViewsModel
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+<div class="wrapper wrapper-content animated fadeIn">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Les Entrées</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("Entree", "Operation", new { area = "Garage" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                    {
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-xs-5 control-label">Poste</label>
+                                    <div class="col-xs-7">
+                                        <select class="form-control" name="choix">
+                                            <option value="0">Conducteur </option>
+                                            <option value="1">Technicien </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <input type="hidden" id="IdHuile" name="IdHuile" class="form-control" placeholder="ID">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Libellé</label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="LibelleHuile" name="LibelleHuile" class="form-control" placeholder="Libellé">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Volume</label>
+
+                                <div class="col-sm-8">
+                                    <input type="text" id="VolumeHuile" name="VolumeHuile" class="form-control" placeholder="Volume">
+                                </div>
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                </div>
+                            </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Les Sorties</h5>
+                </div>
+                <div class="ibox-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-offset-1 col-lg-10">
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Entrée d'huile </a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2">Sortie d'huile </a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-3">Entrée de carburant </a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-4">Sortie de carburant </a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                        </div>
+                    </div>
+
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                        </div>
+                    </div>
+
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                        </div>
+                    </div>
+
+                    <div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

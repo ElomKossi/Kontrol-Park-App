@@ -1,0 +1,56 @@
+﻿@model DAL.Affectation
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Affectation</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DateAffectation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateAffectation)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Conducteur.NumCNIConducteur)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Conducteur.NumCNIConducteur)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mission.LibelleMission)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mission.LibelleMission)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicule.NomVehicule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vehicule.NomVehicule)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

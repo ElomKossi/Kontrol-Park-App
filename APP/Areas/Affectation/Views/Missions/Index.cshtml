@@ -1,0 +1,900 @@
+﻿@model APP.Areas.Affectation.Models.AllViewsModel
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-offset-3 col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Créer une mission </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("Ajouter", "Missions", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                        {
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdMission" name="IdMission" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Intitulé de la mission</label>
+                                    <div class="col-lg-7">
+                                        <input type="text" id="LibelleMission" name="LibelleMission" placeholder="Intitulé de la mission" class="form-control" value="@Model.missionM.LibelleMission">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Date de début</label>
+                                    <div class="col-lg-7">
+                                        <input type="date" class="form-control" id="DateDebutMission" name="DateDebutMission" value="@Convert.ToDateTime(Model.missionM.DateDebutMission).ToString("yyyy-MM-dd")">
+                                        @Html.ValidationMessage("DateDebutMission", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Date de fin</label>
+                                    <div class="col-lg-7">
+                                        <input type="date" class="form-control" id="DateFinMission" name="DateFinMission" value="@Convert.ToDateTime(Model.missionM.DateFinMission).ToString("yyyy-MM-dd")">
+                                        @Html.ValidationMessage("DateFinMission", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Catégories de la mission</label>
+                                    <div class="col-lg-7">
+                                        <select name="IdCategorieMission" class="select2_demo_3 form-control">
+                                        <option></option>
+                                            @{
+                                                foreach (var cat in Model.categorieMission)
+                                                {
+                                                    if (Model.missionM != null)
+                                                    {
+                                                        if (cat.IdCategorieMission == Model.missionM.IdCategorieMission)
+                                                        {
+                                                            <option selected value="@cat.IdCategorieMission">@cat.LibelleCategorieMission</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@cat.IdCategorieMission">@cat.LibelleCategorieMission</option>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@cat.IdCategorieMission">@cat.LibelleCategorieMission</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                @if (ViewData["CompareDate"] != null)
+                                {
+                                    <div class="col-lg-offset-5 col-lg-7">
+                                        <div class="alert alert-danger alert-dismissable">
+                                            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                            @ViewData["CompareDate"]
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7 col-sm-offset-5">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-primary btn-sm pull-right" href="@Url.Action("ExportListM", "Missions")" target="_blank">
+                            Imprimer
+                        </a>
+                        <h2>Liste des missions</h2>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-lg-6">
+                            <a class="btn btn-block btn-outline btn-primary" href="/Affectation/Affectation/Index">
+                                Affecter un véhicule et/ou un conducteur à une mission
+                            </a>
+                        </div>
+                        <div class="col-lg-offset-2 col-lg-4">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("ID")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Intitulé")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Période")
+                                    </th>
+                                    <th>
+                                        Type
+                                    </th>
+                                    <th>
+                                        Catégorie
+                                    </th>
+                                    @*<th>
+                                        Statut
+                                    </th>*@
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.mission.OrderByDescending(x => x.IdMission))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdMission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LibelleMission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateDebutMission) - @Html.DisplayFor(modelItem => item.DateFinMission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TypeMission.LibelleTypeMission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CategorieMission.LibelleCategorieMission)
+                                        </td>
+                                        @*<td>
+                                            @{
+                                                if (item.DateDebutMission > DateTime.Now)
+                                                {
+                                                    <p><span class="label label-default">En attente</span></p>
+                                                }
+                                                else if (item.DateDebutMission <= DateTime.Now || item.Cloturer == false || item.Cloturer == null)
+                                                {
+                                                    <p><span class="label label-primary">En cours</span></p>
+                                                }
+                                                else if (item.DateFinMission < DateTime.Now || item.Cloturer == true)
+                                                {
+                                                    <p><span class="label label-success">Clôturée</span></p>
+                                                }
+                                            }
+                                        </td>*@
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <a class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdMission)">
+                                                    Modifier
+                                                </a>
+                                                @*<a class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdMission)">
+                                                    Détail
+                                                </a>*@
+                                                <a class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#des-@Html.DisplayFor(modelItem => item.IdMission)">
+                                                    Clôturer
+                                                </a>
+                                                <a class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#de-@Html.DisplayFor(modelItem => item.IdMission)">
+                                                    Supprimer
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.mission != null, "Model.mission != null");
+    foreach (var tmp in Model.mission)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdMission" tabindex="@tmp.IdMission" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier une mission</h4>
+                    </div>
+                    @using (Html.BeginForm("Editer", "Missions", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="IdMission" name="IdMission" placeholder="ID" class="form-control" value="@tmp.IdMission">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Intitulé de la mission</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="LibelleMission" name="LibelleMission" placeholder="Intitulé de la mission" class="form-control" value="@tmp.LibelleMission">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date de début</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" class="form-control" id="DateDebutMission" name="DateDebutMission" value="@Convert.ToDateTime(tmp.DateDebutMission).ToString("yyyy-MM-dd")">
+                                        @Html.ValidationMessage("DateDebutMission", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date de fin</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" class="form-control" id="DateFinMission" name="DateFinMission" value="@Convert.ToDateTime(tmp.DateFinMission).ToString("yyyy-MM-dd")">
+                                        @Html.ValidationMessage("DateFinMission", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Type de la mission</label>
+                                    <div class="col-sm-8">
+                                        <select name="IdTypeMission" class="form-control">
+                                            @{
+                                                foreach (var type in Model.typeMission)
+                                                {
+                                                    if (type.IdTypeMission == tmp.IdTypeMission)
+                                                    {
+                                                        <option selected="selected" value="@type.IdTypeMission">@type.LibelleTypeMission</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@type.IdTypeMission">@type.LibelleTypeMission</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Catégories de la mission</label>
+                                    <div class="col-sm-8">
+                                        <select name="IdCategorieMission" class="form-control">
+                                            @{
+                                                foreach (var cat in Model.categorieMission)
+                                                {
+                                                    if (cat.IdCategorieMission == tmp.IdCategorieMission)
+                                                    {
+                                                        <option selected="selected" value="@cat.IdCategorieMission">@cat.LibelleCategorieMission</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@cat.IdCategorieMission">@cat.LibelleCategorieMission</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>*@
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                                                }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="dl-@tmp.IdMission" tabindex="@tmp.IdMission" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Détail sur une mission</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="/Missions/Editer" method="post">
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayName("ID")
+                                </dt>
+                                <dd>
+                                    @tmp.IdMission
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Intitulé de la mission")
+                                </dt>
+                                <dd>
+                                    @tmp.LibelleMission)
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Période de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.DateDebutMission - @tmp.DateFinMission
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Catégorie de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.CategorieMission.LibelleCategorieMission
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Type de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.TypeMission.LibelleTypeMission
+                                </dd>
+
+                                <dt>
+                                    Véhicule-Conducteur
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        if (dmc.Conducteur == null)
+                                        {
+                                            <dd>
+                                                @dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation 
+                                            </dd>
+                                        }
+                                        else
+                                        {
+                                            <dd>
+                                                @dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation - @dmc.Conducteur.NomConducteur @dmc.Conducteur.PrenomConducteur
+                                            </dd>
+                                        }
+                                    }
+                                }
+                                @*<dd>
+                                </dd
+                                <dt>
+                                    Véhicule(s)
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        <dd>
+                                            -@dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation
+                                        </dd>
+                                    }
+                                }
+                                <dt>
+                                    Conducteur(s)
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        <dd>
+                                            -@dmc.Conducteur.NomConducteur @dmc.Conducteur.PrenomConducteur
+                                        </dd>
+                                    }
+                                }*@
+                            </dl>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="de-@tmp.IdMission" tabindex="@tmp.IdMission" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Supprimer une mission</h4>
+                    </div>
+                    @Html.HiddenFor(model => model.conducteurPermis)
+                    <div class="modal-body">
+                        <h3>Supprimer?</h3>
+                        <div>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayName("ID")
+                                </dt>
+                                <dd>
+                                    @tmp.IdMission)
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Intitulé de la mission")
+                                </dt>
+                                <dd>
+                                    @tmp.LibelleMission)
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Période de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.DateDebutMission) - @tmp.DateFinMission)
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Catégorie de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.CategorieMission.LibelleCategorieMission
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Type de mission")
+                                </dt>
+                                <dd>
+                                    @tmp.TypeMission.LibelleTypeMission
+                                </dd>
+                                <dt>
+                                    Véhicule-Conducteur
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        if (dmc.Conducteur == null)
+                                        {
+                                            <dd>
+                                                @dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation
+                                            </dd>
+                                        }
+                                        else
+                                        {
+                                            <dd>
+                                                @dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation - @dmc.Conducteur.NomConducteur @dmc.Conducteur.PrenomConducteur
+                                            </dd>
+                                        }
+                                    }
+                                }
+                                @*<dt>
+                                    Véhicule(s)
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        <dd>
+                                            -@dmc.Vehicule.MarqueVehicule.LibelleMarque @dmc.Vehicule.NomVehicule @dmc.Vehicule.Immatriculation
+                                        </dd>
+                                    }
+                                }
+                                <dt>
+                                    Conducteur(s)
+                                </dt>
+                                @foreach (var dmc in Model.affectation.Where(p => p.IdMission == tmp.IdMission))
+                                {
+                                    if (tmp.IdMission == dmc.IdMission)
+                                    {
+                                        <dd>
+                                            -@dmc.Conducteur.NomConducteur @dmc.Conducteur.PrenomConducteur
+                                        </dd>
+                                    }
+                                }*@
+                            </dl>
+                        </div>
+                        @using (Html.BeginForm("Delete", "Missions", new { id = tmp.IdMission }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Supprimer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="des-@tmp.IdMission" tabindex="@tmp.IdMission" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Clôturer une mission</h4>
+                    </div>
+                    @Html.HiddenFor(model => model.conducteurPermis)
+                    <div class="modal-body">
+                        Voulez-vous clôturer la mission?
+                        @using (Html.BeginForm("Cloturer", "Missions", new { id = tmp.IdMission }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Cloturer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+                                                }
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/plugins/iCheck")
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+    @Scripts.Render("~/plugins/footable")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").validate({
+                rules: {
+                    LibelleMission: {
+                        required: true,
+                    },
+                    DateDebutMission: {
+                        required: true,
+                    },
+                    DateFinMission: {
+                        required: true,
+                    },
+                    IdCategorieMission: {
+                        required: true,
+                    },
+                    IdTypeMission: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>
+
+<script type="text/javascript">
+            $(document).ready(function () {
+                $(".select2_demo_1").select2();
+                $(".select2_demo_2").select2();
+                $(".select2_demo_3").select2({
+                    placeholder: "Faites votre choix",
+                    allowClear: true
+                });
+            });
+</script>
+
+    <script type="text/javascript">
+                    $(document).ready(function () {
+
+                        var $image = $(".image-crop > img")
+                        $($image).cropper({
+                            aspectRatio: 1.618,
+                            preview: ".img-preview",
+                            done: function (data) {
+                                // Output the result data for cropping image.
+                            }
+                        });
+
+                        var $inputImage = $("#inputImage");
+                        if (window.FileReader) {
+                            $inputImage.change(function () {
+                                var fileReader = new FileReader(),
+                                    files = this.files,
+                                    file;
+
+                                if (!files.length) {
+                                    return;
+                                }
+
+                                file = files[0];
+
+                                if (/^image\/\w+$/.test(file.type)) {
+                                    fileReader.readAsDataURL(file);
+                                    fileReader.onload = function () {
+                                        $inputImage.val("");
+                                        $image.cropper("reset", true).cropper("replace", this.result);
+                                    };
+                                } else {
+                                    showMessage("Please choose an image file.");
+                                }
+                            });
+                        } else {
+                            $inputImage.addClass("hide");
+                        }
+
+                        $("#download").click(function () {
+                            window.open($image.cropper("getDataURL"));
+                        });
+
+                        $("#zoomIn").click(function () {
+                            $image.cropper("zoom", 0.1);
+                        });
+
+                        $("#zoomOut").click(function () {
+                            $image.cropper("zoom", -0.1);
+                        });
+
+                        $("#rotateLeft").click(function () {
+                            $image.cropper("rotate", 45);
+                        });
+
+                        $("#rotateRight").click(function () {
+                            $image.cropper("rotate", -45);
+                        });
+
+                        $("#setDrag").click(function () {
+                            $image.cropper("setDragMode", "crop");
+                        });
+
+                        $('#data_1 .input-group.date').datepicker({
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            calendarWeeks: true,
+                            autoclose: true
+                        });
+
+                        $('#data_2 .input-group.date').datepicker({
+                            startView: 1,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_3 .input-group.date').datepicker({
+                            startView: 2,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_4 .input-group.date').datepicker({
+                            minViewMode: 1,
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true,
+                            todayHighlight: true
+                        });
+
+                        $('#data_5 .input-daterange').datepicker({
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        var elem = document.querySelector('.js-switch');
+                        var switchery = new Switchery(elem, { color: '#1AB394' });
+
+                        var elem_2 = document.querySelector('.js-switch_2');
+                        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+                        var elem_3 = document.querySelector('.js-switch_3');
+                        var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+                        var elem_4 = document.querySelector('.js-switch_4');
+                        var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+                        switchery_4.disable();
+
+                        $('.i-checks').iCheck({
+                            checkboxClass: 'icheckbox_square-green',
+                            radioClass: 'iradio_square-green',
+                        });
+
+                        $('.demo1').colorpicker();
+
+                        var divStyle = $('.back-change')[0].style;
+                        $('#demo_apidemo').colorpicker({
+                            color: divStyle.backgroundColor
+                        }).on('changeColor', function (ev) {
+                            divStyle.backgroundColor = ev.color.toHex();
+                        });
+
+                        $('.clockpicker').clockpicker();
+
+                        $('input[name="daterange"]').daterangepicker();
+
+                        $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+                        $('#reportrange').daterangepicker({
+                            format: 'DD/MM/YYYY',
+                            startDate: moment().subtract(29, 'days'),
+                            endDate: moment(),
+                            minDate: '01/01/2012',
+                            maxDate: '31/12/2015',
+                            dateLimit: { days: 60 },
+                            showDropdowns: true,
+                            showWeekNumbers: true,
+                            timePicker: false,
+                            timePickerIncrement: 1,
+                            timePicker12Hour: true,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            },
+                            opens: 'right',
+                            drops: 'down',
+                            buttonClasses: ['btn', 'btn-sm'],
+                            applyClass: 'btn-primary',
+                            cancelClass: 'btn-default',
+                            separator: ' to ',
+                            locale: {
+                                applyLabel: 'Submit',
+                                cancelLabel: 'Cancel',
+                                fromLabel: 'From',
+                                toLabel: 'To',
+                                customRangeLabel: 'Custom',
+                                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                                firstDay: 1
+                            }
+                        }, function (start, end, label) {
+                            console.log(start.toISOString(), end.toISOString(), label);
+                            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                        });
+
+
+                        $(".select2_demo_1").select2();
+                        $(".select2_demo_2").select2();
+                        $(".select2_demo_3").select2({
+                            placeholder: "Select a state",
+                            allowClear: true
+                        });
+
+                        $(".touchspin1").TouchSpin({
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin2").TouchSpin({
+                            min: 0,
+                            max: 100,
+                            step: 0.1,
+                            decimals: 2,
+                            boostat: 5,
+                            maxboostedstep: 10,
+                            postfix: '%',
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin3").TouchSpin({
+                            verticalbuttons: true,
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $('.tagsinput').tagsinput({
+                            tagClass: 'label label-primary'
+                        });
+
+                        $('.dual_select').bootstrapDualListbox({
+                            selectorMinimalHeight: 160
+                        });
+
+
+                    });
+
+
+                    $('.chosen-select').chosen({ width: "100%" });
+
+                    $("#ionrange_1").ionRangeSlider({
+                        min: 0,
+                        max: 5000,
+                        type: 'double',
+                        prefix: "$",
+                        maxPostfix: "+",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_2").ionRangeSlider({
+                        min: 0,
+                        max: 10,
+                        type: 'single',
+                        step: 0.1,
+                        postfix: " carats",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_3").ionRangeSlider({
+                        min: -50,
+                        max: 50,
+                        from: 0,
+                        postfix: "°",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_4").ionRangeSlider({
+                        values: [
+                            "January", "February", "March",
+                            "April", "May", "June",
+                            "July", "August", "September",
+                            "October", "November", "December"
+                        ],
+                        type: 'single',
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_5").ionRangeSlider({
+                        min: 10000,
+                        max: 100000,
+                        step: 100,
+                        postfix: " km",
+                        from: 55000,
+                        hideMinMax: true,
+                        hideFromTo: false
+                    });
+
+                    $(".dial").knob();
+
+                    $("#basic_slider").noUiSlider({
+                        start: 40,
+                        behaviour: 'tap',
+                        connect: 'upper',
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#range_slider").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#drag-fixed").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag-fixed',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+    </script>
+}

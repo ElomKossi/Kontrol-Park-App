@@ -1,0 +1,53 @@
+﻿@model APP.Models.UserViewModel
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Motdepasse";
+}
+
+<div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+               <span class="h3 text-center">Modifier le Mot de Passe</span>
+            </h1>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Motdepasse", "Utilisateur", FormMethod.Post, new { @class = "form-horizontal", @role = "form1", @id = "form1" }))
+            {
+                @*<div class="form-group">
+                    <label for="text" class="col-xs-4 control-label">Identifiant:</label>
+                    <div class="col-xs-8">
+                        <input class="form-control sui-accordion-disabled" id="idnvo" value="@Model.User.Identifiant">
+                    </div>
+                </div>*@
+                <div class="form-group">
+                    <label for="text" class="col-xs-4 control-label">Mot de Passe Actuel:</label>
+                    <div class="col-xs-8">
+                        <input autocomplete="off" autofocus="on" type="password" class="form-control" placeholder="Mot de Passe Actuel" name="motdepasse" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="text" class="col-xs-4 control-label">Nouveau Mot de Passe:</label>
+                    <div class="col-xs-8">
+                        <input autocomplete="off" type="password" class="form-control" placeholder="Nouveau Mot de Passe" name="motdepasse1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="text" class="col-xs-4 control-label">Confirmer :</label>
+                    <div class="col-xs-8">
+                        <input autocomplete="off" type="password" class="form-control" placeholder="Confirmer" name="confirmer" required>
+                    </div>
+                </div>
+
+                <div class="col-xs-6"></div>
+                <div class="btn-group text-center col-xs-6">
+                    <button type="submit" class=" btn btn-primary btnEnregistrer"><span class="fa fa-save"></span> Valider </button>
+                    <span class="col-lg-2"></span>
+                    <button type="reset" class=" btn btn-default"><span class="fa fa-recycle"></span> Annuler </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

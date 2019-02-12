@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="3215fc1f-8b99-4dc1-b4da-c9e3c9af3369" ChangeDateTime="09/23/2017 16:06:21">
+    <Property Name="ElementName" Value="[dbo].[DetailAssurance].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[DetailAssurance]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IdDetailAssurance" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a04242ae-980d-4f33-8c78-7ac1ef3972cd" ChangeDateTime="09/23/2017 16:24:47">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[NumCNITechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NumCNIMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8c0824a8-6844-4689-a785-167b4de016f1" ChangeDateTime="09/23/2017 16:24:59">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[NomTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NomMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8c9f7d73-4bbd-42a6-ada4-3958e5e0c249" ChangeDateTime="09/23/2017 16:25:03">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[PrenomTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="PrenomMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="d5395f92-5989-46c5-b7a5-46bf623e61b3" ChangeDateTime="09/23/2017 16:25:08">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[DateNaissanceTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DateNaissanceMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1c6ac324-19a9-430a-83e4-7961a36ec0a8" ChangeDateTime="09/23/2017 16:25:13">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[LieuxNaissanceTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LieuxNaissanceMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="44e449ab-9e67-4553-aa81-188b9bc40a6c" ChangeDateTime="09/23/2017 16:25:18">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[SexeTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SexeMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="b8e44681-9fad-44ab-844e-ad5aa4335434" ChangeDateTime="09/23/2017 16:25:23">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[AdresseTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="AdresseMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="fce9836d-017e-4b36-bbec-0340adc2d1f6" ChangeDateTime="09/23/2017 16:25:28">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[TelTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="TelMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="72c56c9c-6cde-42f2-89d8-c9139cdcdf54" ChangeDateTime="09/23/2017 16:25:33">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[EmailTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="EmailMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="18479e60-f029-474e-9672-b864b571ea47" ChangeDateTime="09/23/2017 16:25:46">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[DateEmbaucheTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="DateEmbaucheMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="dbc7d5b2-3274-40cb-b7b9-bedaa79bb8ed" ChangeDateTime="09/23/2017 16:26:36">
+    <Property Name="ElementName" Value="[dbo].[Mecanicien].[IdTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mecanicien]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IdMecanicien" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="7a62c09c-0554-4ce2-a7a7-b6b4d1841b38" ChangeDateTime="09/23/2017 16:27:31">
+    <Property Name="ElementName" Value="[dbo].[EntreeHuile].[IdTechnicien]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[EntreeHuile]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="IdMecanicien" />
+  </Operation>
+</Operations>

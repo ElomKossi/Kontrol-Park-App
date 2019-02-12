@@ -1,0 +1,161 @@
+﻿@model APP.Areas.Garage.Models.AllViewsModel
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Intervention";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="jumbotron">
+                <h1>Kontrol Park</h1>
+                <p>Page de gestion des interventions sur les véhicules et dans le garage</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Véhicules </h5>
+                    @{
+                        if (Model.Vehicule == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.Vehicule.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de créer modifier ou supprimer des véhicules tout en renseignant les caractéristiques de chaque véhicules.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/Vehicules/Index">Gérer les véhicules</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Types de véhicules </h5>
+                    @{
+                        if (Model.typeVehicule == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.typeVehicule.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de créer modifier ou supprimer les types de véhicule.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/TypeVehicules/Index">Gérer les Types de véhicules</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Marques de véhicules </h5>
+                    @{
+                        if (Model.marqueVehicule == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.marqueVehicule.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de créer modifier ou supprimer les marques de véhicule.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/MarqueVehicules/Index">Gérer les Affectations de missions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Fournisseurs </h5>
+                    @{
+                        if (Model.fournisseur == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.fournisseur.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de créer modifier ou supprimer les fournisseurs de véhicules.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/Fournisseurs/Index">Gérer les fournisseurs de véhicules</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Assurances </h5>
+                    @{
+                        if (Model.assurance == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.assurance.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de créer modifier ou supprimer les assureurs de véhicules.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/Assurances/Index">Gérer les Assureurs de véhicules</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Aspect des Véhicules </h5>
+                    @{
+                        if (Model.historiqueAspect == null)
+                        {
+                            <span class="label label-primary">0</span>
+                        }
+                        else
+                        {
+                            <span class="label label-primary">@Model.historiqueAspect.Count()</span>
+                        }
+                    }
+                </div>
+                <div class="ibox-content">
+                    <p>L'utilisateur est chargé de notifier l'aspect d'un véhicule à un instant donné.</p>
+                </div>
+                <div class="ibox-footer">
+                    <a class="btn btn-primary btn-rounded" href="/Affectation/AspectVehicules/Index">Gérer l'aspect des véhicules</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html> 
+    <head>
+        <title>@ViewBag.Title - Kontrol Park</title>
+        @if (IsSectionDefined("Styles"))
+            {@RenderSection("Styles", required: false)}
+
+        @Styles.Render("~/Content/css")
+        @Styles.Render("~/font-awesome/css")
+
+        @Styles.Render("~/Content/plugins/dataTables/dataTablesStyles")
+        @Styles.Render("~/Content/plugins/iCheck/iCheckStyles")
+        
+        @Styles.Render("~/plugins/awesomeCheckboxStyles")
+        @Styles.Render("~/plugins/clockpickerStyles")
+        @Styles.Render("~/plugins/dateRangeStyles")
+        @Styles.Render("~/Content/plugins/iCheck/iCheckStyles")
+        @Styles.Render("~/Content/plugins/chosen/chosenStyles")
+        @Styles.Render("~/plugins/switcheryStyles")
+        @Styles.Render("~/plugins/jasnyBootstrapStyles")
+        @Styles.Render("~/plugins/nouiSliderStyles")
+        @Styles.Render("~/plugins/dataPickerStyles")
+        @Styles.Render("~/Content/plugins/ionRangeSlider/ionRangeStyles")
+        @Styles.Render("~/plugins/imagecropperStyles")
+        @Styles.Render("~/Content/plugins/colorpicker/colorpickerStyles")
+        @Styles.Render("~/plugins/select2Styles")
+        @Styles.Render("~/plugins/touchSpinStyles")
+        @Styles.Render("~/plugins/tagInputsStyles")
+        @Styles.Render("~/plugins/duallistStyles")
+        @Styles.Render("~/plugins/footableStyles")
+        @Styles.Render("~/plugins/sweetAlertStyles")
+        @*<link href="~/Content/StyleSheet.css" rel="stylesheet">*@
+    </head>
+    <body class="fixed-sidebar">
+        <!-- Wrapper-->
+        <div id="wrapper">
+
+            <!-- Navigation -->
+            @Html.Partial("_Navigation")
+
+            <!-- Page wraper -->
+            <div id="page-wrapper" class="blue-bg">
+
+                <!-- Top Navbar -->
+                @Html.Partial("_TopNavbar")
+
+                <!-- Main view  -->
+                <div>
+                    @RenderBody()
+                </div>
+
+                <!-- Footer -->
+                @*@Html.Partial("_Footer")*@
+
+            </div>
+            <!-- End page wrapper-->
+
+        </div>
+        <!-- End wrapper-->
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/plugins/metsiMenu")
+        @Scripts.Render("~/plugins/pace")
+        @Scripts.Render("~/plugins/slimScroll")
+        @Scripts.Render("~/bundles/inspinia")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

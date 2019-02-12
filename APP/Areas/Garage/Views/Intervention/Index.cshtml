@@ -1,0 +1,938 @@
+﻿@model APP.Areas.Garage.Models.AllViewsModel
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Ajouter une intervention</h5>
+                    </div>
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("Ajouter", "Intervention", new { area = "Garage" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                        {
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdIntervention" name="IdIntervention" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Type d'intervention</label>
+                                        <div class="col-xs-7">
+                                            <select class="select2_demo_3 form-control" name="IdTypeIntervention">
+                                                <option></option>
+                                                @{
+                                                    foreach (var type in Model.typeIntervention)
+                                                    {
+                                                        if (Model.inter != null)
+                                                        {
+                                                            if (type.IdTypeIntervention == Model.inter.IdTypeIntervention)
+                                                            {
+                                                                <option selected value="@type.IdTypeIntervention">@type.LibelleTypeIntervention</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@type.IdTypeIntervention">@type.LibelleTypeIntervention</option>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdTypeIntervention">@type.LibelleTypeIntervention</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Libellé</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="LibelleIdIntervention" name="LibelleIdIntervention" value="@Model.inter.LibelleIdIntervention" placeholder="Libellé" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Date de début</label>
+                                        <div class="col-xs-7">
+                                            <input type="date" class="form-control" name="DateDebut" value="@Convert.ToDateTime(Model.inter.DateDebut).ToString("yyyy-MM-dd")">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Date de fin</label>
+                                        <div class="col-xs-7">
+                                            <input type="date" class="form-control" name="DateFin" value="@Convert.ToDateTime(Model.inter.DateFin).ToString("yyyy-MM-dd")">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Véhicule</label>
+                                        <div class="col-xs-7">
+                                            <select class="select2_demo_3 form-control" name="IdVehicule">
+                                                <option></option>
+                                                @{
+                                                    foreach (var type in Model.Vehicule)
+                                                    {
+                                                        if (Model.inter != null)
+                                                        {
+                                                            if (type.IdVehicule == Model.inter.IdVehicule)
+                                                            {
+                                                                <option selected value="@type.IdVehicule">
+                                                                    @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                                </option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@type.IdVehicule">
+                                                                    @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                                </option>
+                                                                }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdVehicule">
+                                                                @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                            </option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Mecanicien</label>
+                                        <div class="col-xs-7">
+                                            <select data-placeholder="Choisir un mécanicien" class="chosen-select" name="IdMecanicien" tabindex="4">
+                                                @{
+                                                    foreach (var type in Model.Mecanicien)
+                                                    {
+                                                        if (Model.IdMeca != 0)
+                                                        {
+                                                            if (type.IdMecanicien == Model.IdMeca)
+                                                            {
+                                                                <option selected value="@type.IdMecanicien">
+                                                                    @type.NomMecanicien @type.PrenomMecanicien
+                                                                </option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@type.IdMecanicien">
+                                                                    @type.NomMecanicien @type.PrenomMecanicien
+                                                                </option>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdMecanicien">
+                                                                @type.NomMecanicien @type.PrenomMecanicien
+                                                            </option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Pièces utilisées</label>
+                                        <div class="col-xs-7">
+                                            <select data-placeholder="Choisir une pièce" class="chosen-select" multiple name="IdPiece" tabindex="4">
+                                                @{
+                                                    foreach (var type in Model.piece)
+                                                    {
+                                                        if (Model.IdPiece != null)
+                                                        {
+                                                            foreach (var i in Model.IdPiece)
+                                                            {
+                                                                if (type.IdPiece == i)
+                                                                {
+                                                                    <option selected value="@type.IdPiece">@type.LibellePiece</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@type.IdPiece">@type.LibellePiece</option>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdPiece">@type.LibellePiece</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @if (ViewData["Compare"] != null)
+                                    {
+                                        <div class="pull-right">
+                                            <div class="alert alert-danger alert-dismissable">
+                                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                @ViewData["Compare"]
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Description</label>
+                                        <div class="col-xs-7">
+                                            <textarea id="DescriptionIdIntervention" name="DescriptionIdIntervention" placeholder="Description de l'intervention" class="form-control">@Model.inter.DescriptionIdIntervention</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                </div>
+                            </div>
+                                                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <a class="btn btn-primary btn-sm pull-right" href="@Url.Action("ExportListC", "Intervention")" target="_blank">
+                            Imprimer
+                        </a>
+                        <h2>Liste des intervention</h2>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-lg-offset-7 col-lg-5">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter"
+                                   placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("ID")
+                                    </th>
+                                    <th>
+                                        Libellé 
+                                    </th>
+                                    <th>
+                                        Véhicule
+                                    </th>
+                                    <th>
+                                        Mécanicien
+                                    </th>
+                                    <th>
+                                        Durée
+                                    </th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.intervention.OrderByDescending(x => x.IdIntervention))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdIntervention)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LibelleIdIntervention)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Vehicule.MarqueVehicule.LibelleMarque) @Html.DisplayFor(modelItem => item.Vehicule.NomVehicule) @Html.DisplayFor(modelItem => item.Vehicule.Immatriculation)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.MecaIntervention.FirstOrDefault(j => j.IdIntervention == item.IdIntervention).Mecanicien.NomMecanicien) @Html.DisplayFor(modelItem => item.MecaIntervention.FirstOrDefault(j => j.IdIntervention == item.IdIntervention).Mecanicien.PrenomMecanicien)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateDebut) - @Html.DisplayFor(modelItem => item.DateFin) 
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdIntervention)">
+                                                    Modifier
+                                                </button>
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdIntervention)">
+                                                    Détail
+                                                </button>
+                                                @{
+                                                    if (item.Supprimer == false || item.Supprimer == null)
+                                                    {
+                                                        <a class="btn btn-white btn-xs" href="/Garage/Intervention/Etat/@item.IdIntervention">
+                                                            Supprimer
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="btn btn-white btn-xs" href="/Garage/Intervention/Etat/@item.IdIntervention">
+                                                            Restaurer
+                                                        </a>
+                                                    }
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                                    }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.Mecanicien != null, "Model.Mecanicien != null");
+    foreach (var tmp in Model.intervention)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdIntervention" tabindex="@tmp.IdIntervention" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier un mecanicien</h4>
+                    </div>
+                    @using (Html.BeginForm("Editer", "Intervention", new { area = "Garage" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">ID </label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="IdIntervention" name="IdIntervention" class="form-control" value="@tmp.IdIntervention">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Intitulé </label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.LibelleIdIntervention" id="LibelleIdIntervention" name="LibelleIdIntervention" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Véhicule </label>
+                                    <div class="col-lg-8">
+                                        <select name="IdVehicule" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdVehicule">
+                                                    @tmp.Vehicule.MarqueVehicule.LibelleMarque @tmp.Vehicule.NomVehicule @tmp.Vehicule.Immatriculation
+                                                </option>
+                                                foreach (var type in Model.Vehicule.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdVehicule">
+                                                        @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Mécanicien </label>
+                                    <div class="col-lg-8">
+                                        <select name="IdConducteur" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.IdMecanicien">
+                                                    @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.NomMecanicien @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.PrenomMecanicien
+                                                </option>
+                                                foreach (var type in Model.Mecanicien)
+                                                {
+                                                    if(type.IdMecanicien == @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.IdMecanicien)
+                                                    {
+                                                        <option value="@type.IdMecanicien">
+                                                            @type.NomMecanicien @type.PrenomMecanicien
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de début </label>
+                                    <div class="col-xs-8">
+                                        <input type="date" class="form-control" placeholder="" name="DateDebut" value="@Convert.ToDateTime(tmp.DateDebut).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de fin </label>
+                                    <div class="col-xs-8">
+                                        <input type="date" class="form-control" placeholder="" name="DateFin" value="@Convert.ToDateTime(tmp.DateFin).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Description </label>
+                                    <div class="col-sm-8">
+                                        <textarea value="@tmp.DescriptionIdIntervention" id="DescriptionIdIntervention" name="DescriptionIdIntervention" class="form-control">@tmp.DescriptionIdIntervention
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="dl-@tmp.IdIntervention" tabindex="@tmp.IdIntervention" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Détail d'un mecanicien</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="/Mecanicien/Editer" method="post">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">ID </label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="IdIntervention" name="IdIntervention" class="form-control" value="@tmp.IdIntervention">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Intitulé </label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" value="@tmp.LibelleIdIntervention" id="LibelleIdIntervention" name="LibelleIdIntervention" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Véhicule </label>
+                                    <div class="col-lg-8">
+                                        <select disabled name="IdVehicule" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdVehicule">
+                                                    @tmp.Vehicule.MarqueVehicule.LibelleMarque @tmp.Vehicule.NomVehicule @tmp.Vehicule.Immatriculation
+                                                </option>
+                                                foreach (var type in Model.Vehicule.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdVehicule">
+                                                        @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-4 control-label">Mécanicien </label>
+                                    <div class="col-lg-8">
+                                        <select disabled name="IdConducteur" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.IdMecanicien">
+                                                    @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.NomMecanicien @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.PrenomMecanicien
+                                                </option>
+                                                foreach (var type in Model.Mecanicien)
+                                                {
+                                                    if (type.IdMecanicien == @tmp.MecaIntervention.FirstOrDefault(j => j.IdIntervention == tmp.IdIntervention).Mecanicien.IdMecanicien)
+                                                    {
+                                                        <option value="@type.IdMecanicien">
+                                                            @type.NomMecanicien @type.PrenomMecanicien
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de début </label>
+                                    <div class="col-xs-8">
+                                        <input disabled type="date" class="form-control" placeholder="" name="DateDebut" value="@Convert.ToDateTime(tmp.DateDebut).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de fin </label>
+                                    <div class="col-xs-8">
+                                        <input disabled type="date" class="form-control" placeholder="" name="DateFin" value="@Convert.ToDateTime(tmp.DateFin).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Description </label>
+                                    <div class="col-sm-8">
+                                        <textarea disabled value="@tmp.DescriptionIdIntervention" id="DescriptionIdIntervention" name="DescriptionIdIntervention" class="form-control">@tmp.DescriptionIdIntervention
+                                        </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="modal inmodal fade" id="de-@tmp.IdIntervention" tabindex="@tmp.IdIntervention" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Supprimer un mecanicien</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Supprimer?</h3>
+                        <div>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    ID
+                                </dt>
+                                <dd>
+                                    @tmp.id
+                                </dd>
+                                <dt>
+                                    Numéro de CNI
+                                </dt>
+                                <dd>
+                                    @tmp.NumCNIMecanicien
+                                </dd>
+                                <dt>
+                                    Nom & Prénoms
+                                </dt>
+                                <dd>
+                                    @tmp.NomMecanicien @tmp.PrenomMecanicien
+                                </dd>
+                                <dt>
+                                    Date de naissance
+                                </dt>
+                                <dd>
+                                    @tmp.DateNaissanceMecanicien
+                                </dd>
+                                <dt>
+                                    Lieu de naissance
+                                </dt>
+                                <dd>
+                                    @tmp.LieuxNaissanceMecanicien
+                                </dd>
+                                <dt>
+                                    Sexe
+                                </dt>
+                                <dd>
+                                    @tmp.SexeMecanicien
+                                </dd>
+                                <dt>
+                                    Adresse
+                                </dt>
+                                <dd>
+                                    @tmp.AdresseMecanicien
+                                </dd>
+                                <dt>
+                                    E-mail
+                                </dt>
+                                <dd>
+                                    @tmp.EmailMecanicien
+                                </dd>
+                                <dt>
+                                    Téléphone
+                                </dt>
+                                <dd>
+                                    @tmp.TelMecanicien
+                                </dd>
+                                <dt>
+                                    Date d'embauche
+                                </dt>
+                                <dd>
+                                    @tmp.DateEmbaucheMecanicien
+                                </dd>
+                            </dl>
+                        </div>
+                        @using (Html.BeginForm("Delete", "Mecanicien", new { id = tmp.IdMecanicien }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Supprimer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    }
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+
+    @Scripts.Render("~/plugins/footable")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.footable').footable();
+                    $('.footable2').footable();
+                });
+    </script>
+
+    <script type="text/javascript">
+        $(".select2_demo_1").select2();
+        $(".select2_demo_2").select2();
+        $(".select2_demo_3").select2({
+            placeholder: "Faites un choix",
+            allowClear: true
+        });
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").validate({
+                rules: {
+                    IdIntervention: {
+                        required: true,
+                    },
+                    LibelleIdIntervention: {
+                        required: true,
+                    },
+                    DateDebut: {
+                        required: true,
+                    },
+                    DateFin: {
+                        required: true,
+                    },
+                    IdVehicule: {
+                        required: true,
+                    },
+                    IdMecanicien: {
+                        required: true,
+                    },
+                    IdPiece: {
+                        required: true,
+                    },
+                    DescriptionIdIntervention: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var $image = $(".image-crop > img")
+            $($image).cropper({
+                aspectRatio: 1.618,
+                preview: ".img-preview",
+                done: function (data) {
+                    // Output the result data for cropping image.
+                }
+            });
+
+            var $inputImage = $("#inputImage");
+            if (window.FileReader) {
+                $inputImage.change(function () {
+                    var fileReader = new FileReader(),
+                            files = this.files,
+                            file;
+
+                    if (!files.length) {
+                        return;
+                    }
+
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $inputImage.val("");
+                            $image.cropper("reset", true).cropper("replace", this.result);
+                        };
+                    } else {
+                        showMessage("Please choose an image file.");
+                    }
+                });
+            } else {
+                $inputImage.addClass("hide");
+            }
+
+            $("#download").click(function () {
+                window.open($image.cropper("getDataURL"));
+            });
+
+            $("#zoomIn").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
+
+            $("#zoomOut").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+
+            $("#rotateLeft").click(function () {
+                $image.cropper("rotate", 45);
+            });
+
+            $("#rotateRight").click(function () {
+                $image.cropper("rotate", -45);
+            });
+
+            $("#setDrag").click(function () {
+                $image.cropper("setDragMode", "crop");
+            });
+
+            $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+
+            $('#data_2 .input-group.date').datepicker({
+                startView: 1,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_3 .input-group.date').datepicker({
+                startView: 2,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_4 .input-group.date').datepicker({
+                minViewMode: 1,
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $('#data_5 .input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            var elem = document.querySelector('.js-switch');
+            var switchery = new Switchery(elem, { color: '#1AB394' });
+
+            var elem_2 = document.querySelector('.js-switch_2');
+            var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+            var elem_3 = document.querySelector('.js-switch_3');
+            var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+            var elem_4 = document.querySelector('.js-switch_4');
+            var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+            switchery_4.disable();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.demo1').colorpicker();
+
+            var divStyle = $('.back-change')[0].style;
+            $('#demo_apidemo').colorpicker({
+                color: divStyle.backgroundColor
+            }).on('changeColor', function (ev) {
+                divStyle.backgroundColor = ev.color.toHex();
+            });
+
+            $('.clockpicker').clockpicker();
+
+            $('input[name="daterange"]').daterangepicker();
+
+            $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+            $('#reportrange').daterangepicker({
+                format: 'MM/DD/YYYY',
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment(),
+                minDate: '01/01/2012',
+                maxDate: '12/31/2015',
+                dateLimit: { days: 60 },
+                showDropdowns: true,
+                showWeekNumbers: true,
+                timePicker: false,
+                timePickerIncrement: 1,
+                timePicker12Hour: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'right',
+                drops: 'down',
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-primary',
+                cancelClass: 'btn-default',
+                separator: ' to ',
+                locale: {
+                    applyLabel: 'Submit',
+                    cancelLabel: 'Cancel',
+                    fromLabel: 'From',
+                    toLabel: 'To',
+                    customRangeLabel: 'Custom',
+                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    firstDay: 1
+                }
+            }, function (start, end, label) {
+                console.log(start.toISOString(), end.toISOString(), label);
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            });
+
+            $(".touchspin1").TouchSpin({
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin2").TouchSpin({
+                min: 0,
+                max: 100,
+                step: 0.1,
+                decimals: 2,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: '%',
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin3").TouchSpin({
+                verticalbuttons: true,
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+            $('.dual_select').bootstrapDualListbox({
+                selectorMinimalHeight: 160
+            });
+
+
+        });
+
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $("#ionrange_1").ionRangeSlider({
+            min: 0,
+            max: 5000,
+            type: 'double',
+            prefix: "$",
+            maxPostfix: "+",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_2").ionRangeSlider({
+            min: 0,
+            max: 10,
+            type: 'single',
+            step: 0.1,
+            postfix: " carats",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_3").ionRangeSlider({
+            min: -50,
+            max: 50,
+            from: 0,
+            postfix: "°",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_4").ionRangeSlider({
+            values: [
+                "January", "February", "March",
+                "April", "May", "June",
+                "July", "August", "September",
+                "October", "November", "December"
+            ],
+            type: 'single',
+            hasGrid: true
+        });
+
+        $("#ionrange_5").ionRangeSlider({
+            min: 10000,
+            max: 100000,
+            step: 100,
+            postfix: " km",
+            from: 55000,
+            hideMinMax: true,
+            hideFromTo: false
+        });
+
+        $(".dial").knob();
+
+        $("#basic_slider").noUiSlider({
+            start: 40,
+            behaviour: 'tap',
+            connect: 'upper',
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#range_slider").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#drag-fixed").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag-fixed',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+    </script>
+}

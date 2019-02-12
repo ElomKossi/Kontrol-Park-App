@@ -1,0 +1,1350 @@
+﻿@model APP.Areas.Affectation.Models.AllViewsModel
+@using DAL;
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+    var per = "";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-offset-2 col-lg-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h2>Ajouter un conducteur</h2>
+                    </div>
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("Ajouter", "Conducteurs", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                        {
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdConducteur" name="IdConducteur" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Numéro de la CNI</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="NumCNIConducteur" name="NumCNIConducteur" value="@Model.conducteurM.NumCNIConducteur" placeholder="Numéro de la CNI" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Numéro de permis</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="NumPermis" name="NumPermis" value="@Model.conducteurM.NumPermis" placeholder="Numéro de la CNI" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Nom</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="NomConducteur" name="NomConducteur" value="@Model.conducteurM.NomConducteur" placeholder="Nom" class="form-control">
+                                            @Html.ValidationMessage("NomConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Prénom</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="PrenomConducteur" name="PrenomConducteur" value="@Model.conducteurM.PrenomConducteur" placeholder="Prénoms" class="form-control">
+                                            @Html.ValidationMessage("PrenomConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Date de naissance</label>
+                                        <div class="col-xs-7">
+                                            <input type="date" class="form-control" value="@Convert.ToDateTime(Model.conducteurM.DateNaissanceConducteur).ToString("yyyy-MM-dd")" name="DateNaissanceConducteur">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Lieux de naissance</label>
+                                        <div class="col-xs-7">
+                                            <input type="text" id="LieuxNaissanceConducteur" name="LieuxNaissanceConducteur" value="@Model.conducteurM.LieuxNaissanceConducteur" placeholder="Lieux de naissance" class="form-control">
+                                            @Html.ValidationMessage("LieuxNaissanceConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Sexe</label>
+                                        <div class="col-xs-7">
+                                            <select class="form-control" name="SexeConducteur">
+                                                @{
+                                                    if (Model.conducteurM != null)
+                                                    {
+                                                        if (Model.conducteurM.SexeConducteur == "Masculin")
+                                                        {
+                                                            <option selected value="Masculin">Masculin </option>
+                                                            <option value="Féminin">Féminin </option>
+                                                        }
+                                                        else if (Model.conducteurM.SexeConducteur == "Féminin")
+                                                        {
+                                                            <option value="Masculin">Masculin </option>
+                                                            <option selected value="Féminin">Féminin </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Masculin">Masculin </option>
+                                                            <option value="Féminin">Féminin </option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Adresse</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" id="AdresseConducteur" name="AdresseConducteur" value="@Model.conducteurM.AdresseConducteur" placeholder="Adresse" class="form-control">
+                                            @Html.ValidationMessage("AdresseConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">E-mail</label>
+                                        <div class="col-xs-7">
+                                            <input type="email" id="EmailConducteur" name="EmailConducteur" value="@Model.conducteurM.EmailConducteur" placeholder="E-mail" class="form-control">
+                                            @Html.ValidationMessage("EmailConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Téléphone</label>
+                                        <div class="col-xs-7">
+                                            <input type="tel" id="TelConducteur" name="TelConducteur" value="@Model.conducteurM.TelConducteur" placeholder="Téléphone" class="form-control">
+                                            @Html.ValidationMessage("TelConducteur", "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Type de permis</label>
+                                        <div class="col-xs-7">
+                                            <select name="IdCategoriePermis" data-placeholder="Choisir un permis" class="chosen-select" multiple tabindex="4">
+                                                @{
+                                                    foreach (var catp in Model.categoriePermis)
+                                                    {
+                                                        if (Model.IdCondPer != null)
+                                                        {
+                                                            foreach (var i in Model.IdCondPer)
+                                                            {
+                                                                if (catp.IdCategoriePermis == i)
+                                                                {
+                                                                    <option selected value="@catp.IdCategoriePermis">@catp.LibelleCategoriePermis</option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@catp.IdCategoriePermis">@catp.LibelleCategoriePermis</option>
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@catp.IdCategoriePermis">@catp.LibelleCategoriePermis</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Date d'expiration</label>
+                                        <div class="col-xs-7">
+                                            <input type="date" class="form-control" name="DateExpire" value="@Convert.ToDateTime(Model.conducteurM.DateExpire).ToString("yyyy-MM-dd")">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-5 control-label">Date d'embauche</label>
+                                        <div class="col-xs-7">
+                                            <input type="date" class="form-control" name="DateEmbaucheConducteur" value="@Convert.ToDateTime(Model.conducteurM.DateEmbaucheConducteur).ToString("yyyy-MM-dd")">
+                                        </div>
+                                    </div>
+                                    @if (ViewData["CompareAge"] != null)
+                                    {
+                                        <div class="pull-right">
+                                            <div class="alert alert-danger alert-dismissable">
+                                                <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                                @ViewData["CompareAge"]
+                                            </div>
+                                        </div>
+                                    }
+                                    @*<div class="form-group">
+                                    </div>*@
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-5">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <a class="btn btn-primary btn-sm pull-right" href="@Url.Action("ExportListC", "Conducteurs")" target="_blank">
+                            Imprimer
+                        </a>
+                        <h2>Liste des Conducteurs</h2>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-lg-4">
+                            <a class="btn btn-block btn-outline btn-primary" href="/Affectation/ConducteurPermis/Index">
+                                Liste des conducteurs avec leur permis
+                            </a>
+                        </div>
+                        <div class="col-lg-offset-3 col-lg-5">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Numéro de la CNI
+                                    </th>
+                                    <th>Numéro de Permis</th>
+                                    <th>
+                                        Nom & Prénoms
+                                    </th>
+                                    <th>
+                                        Sexe
+                                    </th>
+                                    <th>Permis disponibles</th>
+                                    <th>Statut</th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.conducteur.OrderByDescending(x => x.IdConducteur))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NumCNIConducteur)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NumPermis)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NomConducteur) @Html.DisplayFor(modelItem => item.PrenomConducteur)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.SexeConducteur)
+                                        </td>
+                                        @{ 
+                                            per = "";
+                                            foreach(var i in Model.conducteurPermis.Where(p => p.IdConducteur == item.IdConducteur))
+                                            {
+                                                per = per + " - " + i.CategoriePermis.LibelleCategoriePermis;
+                                            }
+                                        }
+                                        <td>
+                                            @*<div class="btn-group">
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#aj-@Html.DisplayFor(modelItem => item.IdConducteur)">
+                                                    Ajouter
+                                                </button>
+                                                @*<a class="btn btn-white btn-xs" href="/Affectation/Conducteurs/Modif/@item.IdConducteur">
+                                                    Le(s) permi(s) disponible(s)
+                                                </a>
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#pd-@Html.DisplayFor(modelItem => item.IdConducteur)" data-backdrop="static">
+                                                    Le(s) permi(s) disponible(s)
+                                                </button>
+                                                @Html.ActionLink("Editer", "Modif", new { id = item.IdConducteur }, new { @class = "btn btn-white btn-xs" })
+                                            </div>*@
+                                            @per
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (item.EnMission == true)
+                                                {
+                                                    <span class="label label-primary">En mission</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="label label-info">Libre</span>
+                                                }
+                                            }
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdConducteur)">
+                                                    Modifier
+                                                </button>
+                                                <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdConducteur)">
+                                                    Détail
+                                                </button>
+                                                @{
+                                                    if (item.EnActivite == false || item.EnActivite == null)
+                                                    {
+                                                        <a class="btn btn-white btn-xs" href="/Affectation/Assurances/Etat/@item.IdConducteur">
+                                                            Remise en activité
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="btn btn-white btn-xs" href="/Affectation/Assurances/Etat/@item.IdConducteur">
+                                                            Mise hors activité
+                                                        </a>
+                                                    }
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                                    }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.conducteurPermis != null, "Model.conducteur != null");
+    foreach (var tmp in Model.conducteurPermis)
+    {
+        <div class="modal inmodal fade" id="aj-@tmp.IdConducteur" tabindex="@tmp.IdConducteur" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Ajouter un permis</h4>
+                    </div>
+                    @using (Html.BeginForm("AjouterP", "Conducteurs", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="IdConducteur" name="IdConducteur" value="@tmp.IdConducteur" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom & Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="IdConducteur" name="IdConducteur" value="@tmp.Conducteur.NomConducteur  @tmp.Conducteur.PrenomConducteur" class="form-control">
+                                        @Html.ValidationMessage("NumPermis", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de Permis</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="NumPermis" name="NumPermis" placeholder="Numéro de Permis" class="form-control" value="@tmp.Conducteur.NumPermis">
+                                        @Html.ValidationMessage("NumPermis", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="IdCategoriePermis">Type de Permis</label>
+                                    <div class="col-sm-8">
+                                        <select name="IdCategoriePermis" class="chosen-select" multiple tabindex="4">
+                                            @{
+                                                foreach (var i in Model.conducteurPermis.Where(p => p.IdConducteur == tmp.IdConducteur))
+                                                {
+                                                    <option selected value="@i.IdCategoriePermis">@i.CategoriePermis.LibelleCategoriePermis</option>
+                                                }
+                                                foreach (var catp in (Model.categoriePermis.Select(l => l.IdCategoriePermis).ToList())
+                                                    .Except(Model.conducteurPermis.Where(l => l.IdConducteur == tmp.IdConducteur).Select(l => l.CategoriePermis.IdCategoriePermis).ToList()))
+                                                {
+                                                    <option value="@catp">@Model.categoriePermis.Find(l => l.IdCategoriePermis == catp).LibelleCategoriePermis</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date d'expiration</label>
+                                    <div class="col-sm-8">
+                                        <input type="date" class="form-control" name="DateExpire" value="@tmp.Conducteur.DateExpire">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>*@
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                                            }
+                </div>
+            </div>
+        </div>
+
+        @*<div class="modal inmodal fade" id="pd-@tmp.IdConducteur" tabindex="@tmp.IdConducteur" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Le(s) permis de @tmp..NomConducteur @tmp.PrenomConducteur</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-offset-3 col-lg-5">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Permis
+                                    </th>
+                                    <th>
+                                        Numéro
+                                    </th>
+                                    <th>
+                                        Expiration
+                                    </th>
+                                    <th class="text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.conducteurPermis.Where(p => p.IdConducteur == tmp.IdConducteur))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CategoriePermis.LibelleCategoriePermis)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.NumPermis)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateExpire)
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <a class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#e1-@Html.DisplayFor(modelItem => item.IdConducteurPermis)">
+                                                    Modifier
+                                                </a>
+                                                @{
+                                                    if (item.Supprimer == false || item.Supprimer == null)
+                                                    {
+                                                        <a class="btn btn-white btn-bitbucket" href="/Affectation/Conducteurs/EtatP/@item.IdConducteurPermis">
+                                                            Supprimer
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="btn btn-white btn-bitbucket" href="/Affectation/Conducteurs/EtatP/@item.IdConducteurPermis">
+                                                            Restaurer
+                                                        </a>
+                                                    }
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                                    }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+    } 
+}
+
+@{
+    Debug.Assert(Model.conducteur != null, "Model.conducteur != null");
+    foreach (var tmp in Model.conducteur)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdConducteur" tabindex="@tmp.IdConducteur" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier un conducteur</h4>
+                    </div>
+                    @using (Html.BeginForm("Editer", "Conducteurs", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">ID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="IdConducteur" name="IdConducteur" class="form-control" value="@tmp.IdConducteur">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de la CNI</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.NumCNIConducteur" id="NumCNIConducteur" name="NumCNIConducteur" placeholder="Numéro de la CNI" class="form-control">
+                                        @Html.ValidationMessage("NumCNIConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de permis</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.NumPermis" id="NumPermis" name="NumPermis" placeholder="Numéro de la CNI" class="form-control">
+                                        @Html.ValidationMessage("NumPermis", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.NomConducteur" id="NomConducteur" name="NomConducteur" placeholder="Nom" class="form-control">
+                                        @Html.ValidationMessage("NomConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.PrenomConducteur" id="PrenomConducteur" name="PrenomConducteur" placeholder="Prénoms" class="form-control">
+                                        @Html.ValidationMessage("PrenomConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de naissance</label>
+                                    <div class="col-xs-8">
+                                        <input type="date" class="form-control" placeholder="" name="DateNaissanceConducteur" value="@Convert.ToDateTime(tmp.DateNaissanceConducteur).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Lieux de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.LieuxNaissanceConducteur" id="LieuxNaissanceConducteur" name="LieuxNaissanceConducteur" placeholder="Lieux de naissance" class="form-control">
+                                        @Html.ValidationMessage("LieuxNaissanceConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Sexe</label>
+                                    <div class="col-sm-8">
+                                        <select value="@tmp.SexeConducteur" class="form-control" name="SexeConducteur">
+                                            <option value="Masculin">Masculin </option>
+                                            <option value="Féminin">Féminin </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Adresse</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" value="@tmp.AdresseConducteur" id="AdresseConducteur" name="AdresseConducteur" placeholder="Adresse" class="form-control">
+                                        @Html.ValidationMessage("AdresseConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">E-mail</label>
+                                    <div class="col-sm-8">
+                                        <input type="email" value="@tmp.EmailConducteur" id="EmailConducteur" name="EmailConducteur" placeholder="E-mail" class="form-control">
+                                        @Html.ValidationMessage("EmailConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Téléphone</label>
+                                    <div class="col-sm-8">
+                                        <input type="tel" value="@tmp.TelConducteur" id="TelConducteur" name="TelConducteur" placeholder="Téléphone" class="form-control">
+                                        @Html.ValidationMessage("TelConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="IdCategoriePermis">Type de Permis</label>
+                                    <div class="col-sm-8">
+                                        <select name="IdCategoriePermis" class="chosen-select" multiple tabindex="4">
+                                            @{
+                                                foreach (var i in Model.conducteurPermis.Where(p => p.IdConducteur == tmp.IdConducteur))
+                                                {
+                                                    <option selected value="@i.IdCategoriePermis">@i.CategoriePermis.LibelleCategoriePermis</option>
+                                                }
+                                                foreach (var catp in (Model.categoriePermis.Select(l => l.IdCategoriePermis).ToList())
+                                                    .Except(Model.conducteurPermis.Where(l => l.IdConducteur == tmp.IdConducteur).Select(l => l.CategoriePermis.IdCategoriePermis).ToList()))
+                                                {
+                                                    <option value="@catp">@Model.categoriePermis.Find(l => l.IdCategoriePermis == catp).LibelleCategoriePermis</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date d'expiration</label>
+                                    <div class="col-xs-8">
+                                        <input type="date" class="form-control" placeholder="" name="DateExpire" value="@Convert.ToDateTime(tmp.DateExpire).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date d'embauche</label>
+                                    <div class="col-xs-8">
+                                        <input type="date" class="form-control" placeholder="" name="DateEmbaucheConducteur" value="@Convert.ToDateTime(tmp.DateEmbaucheConducteur).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="dl-@tmp.IdConducteur" tabindex="@tmp.IdConducteur" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Détail d'un conducteur</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="/Conducteurs/Editer" method="post">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">ID</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled id="IdConducteur" name="IdConducteur" class="form-control" value="@tmp.IdConducteur">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de la CNI</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled value="@tmp.NumCNIConducteur" id="NumCNIConducteur" name="NumCNIConducteur" placeholder="Numéro de la CNI" class="form-control">
+                                        @Html.ValidationMessage("NumCNIConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de Permis</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="NumPermis" name="NumPermis" placeholder="Numéro de Permis" class="form-control" value="@tmp.NumPermis">
+                                        @Html.ValidationMessage("NumPermis", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled value="@tmp.NomConducteur" id="NomConducteur" name="NomConducteur" placeholder="Nom" class="form-control">
+                                        @Html.ValidationMessage("NomConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled value="@tmp.PrenomConducteur" id="PrenomConducteur" name="PrenomConducteur" placeholder="Prénoms" class="form-control">
+                                        @Html.ValidationMessage("PrenomConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date de naissance</label>
+                                    <div class="col-xs-8">
+                                        <input disabled type="date" class="form-control" placeholder="" name="DateNaissanceConducteur" value="@Convert.ToDateTime(tmp.DateNaissanceConducteur).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Lieux de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled value="@tmp.LieuxNaissanceConducteur" id="LieuxNaissanceConducteur" name="LieuxNaissanceConducteur" placeholder="Lieux de naissance" class="form-control">
+                                        @Html.ValidationMessage("LieuxNaissanceConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Sexe</label>
+                                    <div class="col-sm-8">
+                                        <select value="@tmp.SexeConducteur" disabled class="form-control" name="SexeConducteur">
+                                            <option value="Masculin">Masculin </option>
+                                            <option value="Féminin">Féminin </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Adresse</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" disabled value="@tmp.AdresseConducteur" id="AdresseConducteur" name="AdresseConducteur" placeholder="Adresse" class="form-control">
+                                        @Html.ValidationMessage("AdresseConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">E-mail</label>
+                                    <div class="col-sm-8">
+                                        <input type="email" disabled value="@tmp.EmailConducteur" id="EmailConducteur" name="EmailConducteur" placeholder="E-mail" class="form-control">
+                                        @Html.ValidationMessage("EmailConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Téléphone</label>
+                                    <div class="col-sm-8">
+                                        <input type="tel" disabled value="@tmp.TelConducteur" id="TelConducteur" name="TelConducteur" placeholder="Téléphone" class="form-control">
+                                        @Html.ValidationMessage("TelConducteur", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="IdCategoriePermis">Type de Permis</label>
+                                    <div class="col-sm-8">
+                                        <select disabled name="IdCategoriePermis" class="chosen-select" multiple tabindex="4">
+                                            @{
+                                                foreach (var i in Model.conducteurPermis.Where(p => p.IdConducteur == tmp.IdConducteur))
+                                                {
+                                                    <option selected value="@i.IdCategoriePermis">@i.CategoriePermis.LibelleCategoriePermis</option>
+                                                }
+                                                foreach (var catp in (Model.categoriePermis.Select(l => l.IdCategoriePermis).ToList())
+                                                    .Except(Model.conducteurPermis.Where(l => l.IdConducteur == tmp.IdConducteur).Select(l => l.CategoriePermis.IdCategoriePermis).ToList()))
+                                                {
+                                                    <option value="@catp">@Model.categoriePermis.Find(l => l.IdCategoriePermis == catp).LibelleCategoriePermis</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date d'expiration</label>
+                                    <div class="col-xs-8">
+                                        <input disabled type="date" class="form-control" placeholder="" name="DateExpire" value="@Convert.ToDateTime(tmp.DateExpire).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date d'embauche</label>
+                                    <div class="col-xs-8">
+                                        <input disabled type="date" class="form-control" placeholder="" name="DateEmbaucheConducteur" value="@Convert.ToDateTime(tmp.DateEmbaucheConducteur).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="de-@tmp.IdConducteur" tabindex="@tmp.IdConducteur" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Supprimer un conducteur</h4>
+                    </div>
+                    @Html.HiddenFor(model => model.conducteur)
+                    <div class="modal-body">
+                        <h3>Supprimer?</h3>
+                        <div>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    ID
+                                </dt>
+                                <dd>
+                                    @tmp.IdConducteur
+                                </dd>
+                                <dt>
+                                    Numéro de CNI
+                                </dt>
+                                <dd>
+                                    @tmp.NumCNIConducteur
+                                </dd>
+                                <dt>
+                                    Nom & Prénoms
+                                </dt>
+                                <dd>
+                                    @tmp.NomConducteur @tmp.PrenomConducteur
+                                </dd>
+                                <dt>
+                                    Date de naissance
+                                </dt>
+                                <dd>
+                                    @tmp.DateNaissanceConducteur
+                                </dd>
+                                <dt>
+                                    Lieu de naissance
+                                </dt>
+                                <dd>
+                                    @tmp.LieuxNaissanceConducteur
+                                </dd>
+                                <dt>
+                                    Sexe
+                                </dt>
+                                <dd>
+                                    @tmp.SexeConducteur
+                                </dd>
+                                <dt>
+                                    Adresse
+                                </dt>
+                                <dd>
+                                    @tmp.AdresseConducteur
+                                </dd>
+                                <dt>
+                                    E-mail
+                                </dt>
+                                <dd>
+                                    @tmp.EmailConducteur
+                                </dd>
+                                <dt>
+                                    Téléphone
+                                </dt>
+                                <dd>
+                                    @tmp.TelConducteur
+                                </dd>
+                                <dt>
+                                    Date d'embauche
+                                </dt>
+                                <dd>
+                                    @tmp.DateEmbaucheConducteur
+                                </dd>
+                            </dl>
+                        </div>
+                        @using (Html.BeginForm("Delete", "Conducteurs", new { id = tmp.IdConducteur }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Supprimer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+@*@{
+    Debug.Assert(Model.conducteur != null, "Model.conducteur != null");
+    foreach (var tmp in Model.conducteurPermis)
+    {
+        <div class="modal inmodal fade" id="e1-@tmp.IdConducteurPermis" tabindex="@tmp.IdConducteurPermis" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier le permis d'un conducteur</h4>
+                    </div>
+                    @using (Html.BeginForm("EditerP", "Conducteurs", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">ID</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="IdConducteurPermis" name="IdConducteurPermis" class="form-control" value="@tmp.IdConducteurPermis">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom & Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <select disabled name="IdConducteur" class="form-control">
+                                            @{
+                                                foreach (var cond in Model.conducteur)
+                                                {
+                                                    if (cond.IdConducteur == tmp.IdConducteur)
+                                                    {
+                                                        <option selected="selected" value="@tmp.IdConducteur">@cond.NomConducteur @cond.PrenomConducteur</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@tmp.IdConducteur">@cond.NomConducteur @cond.PrenomConducteur</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label" for="IdCategoriePermis">Type de Permis</label>
+                                    <div class="col-sm-8">
+                                        <select name="IdCategoriePermis"  class="chosen-select" multiple tabindex="4">
+                                            @{
+                                                foreach (var catp in Model.categoriePermis)
+                                                {
+                                                    if (catp.IdCategoriePermis == tmp.IdCategoriePermis)
+                                                    {
+                                                        <option selected="selected" value="@catp.IdCategoriePermis">@catp.LibelleCategoriePermis</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@catp.IdCategoriePermis">@catp.LibelleCategoriePermis</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de Permis</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="NumPermis" name="NumPermis" placeholder="Numéro de Permis" class="form-control" value="@tmp.NumPermis">
+                                        @Html.ValidationMessage("NumPermis", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group" id="data_1">
+                                    <label class="col-sm-4 control-label">Date d'expiration</label>
+                                    <div class="col-xs-8">
+                                        <div class="input-group date">
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span><input type="text" class="form-control" name="DateExpire" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                                                }
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal inmodal fade" id="de-@tmp.IdConducteurPermis" tabindex="@tmp.IdConducteurPermis" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Supprimer un conducteur</h4>
+                    </div>
+                    @Html.HiddenFor(model => model.conducteurPermis)
+                    <div class="modal-body">
+                        <h3>Supprimer?</h3>
+                        <div>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayName("Nom & Prénoms")
+                                </dt>
+                                <dd>
+                                    @tmp.Conducteur.NomConducteur +" "+ @tmp.Conducteur.PrenomConducteur
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Type de Permis")
+                                </dt>
+                                <dd>
+                                    @tmp.CategoriePermis.LibelleCategoriePermis
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Numéro de Permis")
+                                </dt>
+                                <dd>
+                                    @tmp.NumPermis
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Date d'expiration")
+                                </dt>
+                                <dd>
+                                    @tmp.DateExpire
+                                </dd>
+                            </dl>
+                        </div>
+                        @using (Html.BeginForm("Delete", "ConducteurPermis", new { id = tmp.IdConducteurPermis }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Supprimer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}*@
+
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+
+    @Scripts.Render("~/plugins/iCheck")
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+
+    @Scripts.Render("~/plugins/footable")
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.footable').footable();
+            $('.footable2').footable();
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").validate({
+                rules: {
+                    IdConducteur: {
+                        required: true,
+                    },
+                    NumCNIConducteur: {
+                        required: true,
+                    },
+                    NomConducteur: {
+                        required: true,
+                    },
+                    PrenomConducteur: {
+                        required: true,
+                    },
+                    DateNaissanceConducteur: {
+                        required: true,
+                    },
+                    LieuxNaissanceConducteur: {
+                        required: true,
+                    },
+                    SexeConducteur: {
+                        required: true,
+                    },
+                    AdresseConducteur: {
+                        required: true,
+                    },
+                    TelConducteur: {
+                        required: true,
+                    },
+                    EmailConducteur: {
+                        required: true,
+                    },
+                    DateEmbaucheConducteur: {
+                        required: true,
+                    },
+                    NumPermis: {
+                        required: true,
+                    },
+                    DateExpire: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>
+
+<script type="text/javascript">
+                $(document).ready(function () {
+                    $(".select2_demo_1").select2();
+                    $(".select2_demo_2").select2();
+                    $(".select2_demo_3").select2({
+                        placeholder: "Faites votre choix",
+                        allowClear: true
+                    });
+                });
+</script>
+
+    <script type="text/javascript">
+                    $(document).ready(function () {
+
+                        var $image = $(".image-crop > img")
+                        $($image).cropper({
+                            aspectRatio: 1.618,
+                            preview: ".img-preview",
+                            done: function (data) {
+                                // Output the result data for cropping image.
+                            }
+                        });
+
+                        var $inputImage = $("#inputImage");
+                        if (window.FileReader) {
+                            $inputImage.change(function () {
+                                var fileReader = new FileReader(),
+                                    files = this.files,
+                                    file;
+
+                                if (!files.length) {
+                                    return;
+                                }
+
+                                file = files[0];
+
+                                if (/^image\/\w+$/.test(file.type)) {
+                                    fileReader.readAsDataURL(file);
+                                    fileReader.onload = function () {
+                                        $inputImage.val("");
+                                        $image.cropper("reset", true).cropper("replace", this.result);
+                                    };
+                                } else {
+                                    showMessage("Please choose an image file.");
+                                }
+                            });
+                        } else {
+                            $inputImage.addClass("hide");
+                        }
+
+                        $("#download").click(function () {
+                            window.open($image.cropper("getDataURL"));
+                        });
+
+                        $("#zoomIn").click(function () {
+                            $image.cropper("zoom", 0.1);
+                        });
+
+                        $("#zoomOut").click(function () {
+                            $image.cropper("zoom", -0.1);
+                        });
+
+                        $("#rotateLeft").click(function () {
+                            $image.cropper("rotate", 45);
+                        });
+
+                        $("#rotateRight").click(function () {
+                            $image.cropper("rotate", -45);
+                        });
+
+                        $("#setDrag").click(function () {
+                            $image.cropper("setDragMode", "crop");
+                        });
+
+                        $('#data_1 .input-group.date').datepicker({
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            calendarWeeks: true,
+                            autoclose: true
+                        });
+
+                        $('#data_2 .input-group.date').datepicker({
+                            startView: 1,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_3 .input-group.date').datepicker({
+                            startView: 2,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_4 .input-group.date').datepicker({
+                            minViewMode: 1,
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true,
+                            todayHighlight: true
+                        });
+
+                        $('#data_5 .input-daterange').datepicker({
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        var elem = document.querySelector('.js-switch');
+                        var switchery = new Switchery(elem, { color: '#1AB394' });
+
+                        var elem_2 = document.querySelector('.js-switch_2');
+                        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+                        var elem_3 = document.querySelector('.js-switch_3');
+                        var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+                        var elem_4 = document.querySelector('.js-switch_4');
+                        var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+                        switchery_4.disable();
+
+                        $('.i-checks').iCheck({
+                            checkboxClass: 'icheckbox_square-green',
+                            radioClass: 'iradio_square-green',
+                        });
+
+                        $('.demo1').colorpicker();
+
+                        var divStyle = $('.back-change')[0].style;
+                        $('#demo_apidemo').colorpicker({
+                            color: divStyle.backgroundColor
+                        }).on('changeColor', function (ev) {
+                            divStyle.backgroundColor = ev.color.toHex();
+                        });
+
+                        $('.clockpicker').clockpicker();
+
+                        $('input[name="daterange"]').daterangepicker();
+
+                        $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+                        $('#reportrange').daterangepicker({
+                            format: 'DD/MM/YYYY',
+                            startDate: moment().subtract(29, 'days'),
+                            endDate: moment(),
+                            minDate: '01/01/2012',
+                            maxDate: '31/12/2015',
+                            dateLimit: { days: 60 },
+                            showDropdowns: true,
+                            showWeekNumbers: true,
+                            timePicker: false,
+                            timePickerIncrement: 1,
+                            timePicker12Hour: true,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            },
+                            opens: 'right',
+                            drops: 'down',
+                            buttonClasses: ['btn', 'btn-sm'],
+                            applyClass: 'btn-primary',
+                            cancelClass: 'btn-default',
+                            separator: ' to ',
+                            locale: {
+                                applyLabel: 'Submit',
+                                cancelLabel: 'Cancel',
+                                fromLabel: 'From',
+                                toLabel: 'To',
+                                customRangeLabel: 'Custom',
+                                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                                firstDay: 1
+                            }
+                        }, function (start, end, label) {
+                            console.log(start.toISOString(), end.toISOString(), label);
+                            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                        });
+
+
+                        $(".select2_demo_1").select2();
+                        $(".select2_demo_2").select2();
+                        $(".select2_demo_3").select2({
+                            placeholder: "Select a state",
+                            allowClear: true
+                        });
+
+                        $(".touchspin1").TouchSpin({
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin2").TouchSpin({
+                            min: 0,
+                            max: 100,
+                            step: 0.1,
+                            decimals: 2,
+                            boostat: 5,
+                            maxboostedstep: 10,
+                            postfix: '%',
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin3").TouchSpin({
+                            verticalbuttons: true,
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $('.tagsinput').tagsinput({
+                            tagClass: 'label label-primary'
+                        });
+
+                        $('.dual_select').bootstrapDualListbox({
+                            selectorMinimalHeight: 160
+                        });
+
+
+                    });
+
+
+                    $('.chosen-select').chosen({ width: "100%" });
+
+                    $("#ionrange_1").ionRangeSlider({
+                        min: 0,
+                        max: 5000,
+                        type: 'double',
+                        prefix: "$",
+                        maxPostfix: "+",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_2").ionRangeSlider({
+                        min: 0,
+                        max: 10,
+                        type: 'single',
+                        step: 0.1,
+                        postfix: " carats",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_3").ionRangeSlider({
+                        min: -50,
+                        max: 50,
+                        from: 0,
+                        postfix: "°",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_4").ionRangeSlider({
+                        values: [
+                            "January", "February", "March",
+                            "April", "May", "June",
+                            "July", "August", "September",
+                            "October", "November", "December"
+                        ],
+                        type: 'single',
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_5").ionRangeSlider({
+                        min: 10000,
+                        max: 100000,
+                        step: 100,
+                        postfix: " km",
+                        from: 55000,
+                        hideMinMax: true,
+                        hideFromTo: false
+                    });
+
+                    $(".dial").knob();
+
+                    $("#basic_slider").noUiSlider({
+                        start: 40,
+                        behaviour: 'tap',
+                        connect: 'upper',
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#range_slider").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#drag-fixed").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag-fixed',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+    </script>
+}
+

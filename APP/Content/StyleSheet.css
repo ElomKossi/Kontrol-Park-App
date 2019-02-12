@@ -1,0 +1,10 @@
+﻿body {
+    background: url(bg1.jpg)
+}
+
+.plan {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    background: url(bg1.jpg);
+}

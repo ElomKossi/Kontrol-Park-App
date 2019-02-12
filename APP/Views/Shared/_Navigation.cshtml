@@ -1,0 +1,96 @@
+﻿<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    @{
+                        if (Request.Cookies["userName"] != null)
+                        {
+                            HttpCookie aCookie = Request.Cookies["userName"];
+                            HttpCookie bCookie = Request.Cookies["usersurname"];
+                            HttpCookie cCookie = Request.Cookies["profil"];
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold">@Server.HtmlEncode(aCookie.Value) @Server.HtmlEncode(bCookie.Value)</strong>
+                                    </span> <span class="text-muted text-xs block">@Server.HtmlEncode(cCookie.Value) <b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a href="/Utilisateur/Index">Paramètre</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/Login/Deconnexion">Logout</a></li>
+                            </ul>
+                        }
+                    }
+                </div>
+                <div class="logo-element">
+                    KP
+                </div>
+            </li>
+            <li class="@Html.IsSelected(controller: "Index")">
+                <a href="/Affectation/Index/IndexVehicule"><i class="fa fa-car"></i> 
+                    <span class="nav-label" data-i18n="nav.animations">Véhicules </span>
+                </a>
+            </li>
+            <li class="@Html.IsSelectedPLUS(area: "Affectation")">
+                <a href="/Affectation/Index/Index">
+                    <i class="fa fa-tasks"></i>
+                    <span class="nav-label">Les affectations</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li class="@Html.IsSelectedPLUS(area: "Affectation",controller: "Missions", action: "Index")"><a href="/Affectation/Missions/Index">Les Missions</a></li>
+                    <li class="@Html.IsSelectedPLUS(area: "Affectation",controller: "CategorieMissions", action: "Index")"><a href="/Affectation/CategorieMissions/Index">Les Catégories Missions</a></li>
+                    <li class="@Html.IsSelectedPLUS(area: "Affectation",controller: "TypeMissions", action: "Index")"><a href="/Affectation/TypeMissions/Index">Les Types de  Missions</a></li>
+                </ul>
+            </li>
+            <li class="@Html.IsSelectedPLUS(controller: "Conducteurs")">
+                <a href="/Affectation/Conducteurs/Index">
+                    <i class="fa fa-tasks"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Conducteurs </span>
+                </a>
+            </li>
+            <li class="@Html.IsSelectedPLUS(controller: "Missions")">
+                <a href="/Affectation/Missions/Index">
+                    <i class="fa fa-tasks"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Missions </span>
+                </a>
+            </li>
+            <li class="">
+                <a href="/Affectation/Index/Index">
+                    <i class="fa fa-users"></i>
+                    <span class="nav-label">Personnel</span><span class="fa arrow"></span>
+                </a>
+                <ul class="nav nav-second-level">
+                    <li><a href="/Affectation/CategoriePermis/Index">Les Catégories de Permis de conduire</a></li>
+                    <li><a href="/Affectation/Conducteurs/Index">Conducteurs</a></li>
+                    <li><a href="/Affectation/Conducteurs/Index">Techniciens</a></li>
+                </ul>
+            </li>
+            <li class="">
+                <a href="/Affectation/Index/Index">
+                    <i class="fa fa-cogs"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Interventions </span>
+                </a>
+            </li>
+            <li class="@Html.IsSelectedPLUS(controller: "Admin")">
+                <a href="/Administraton/Admin/Index">
+                    <i class="fa fa-dashboard"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Administration </span>
+                </a>
+            </li>
+            <li class="@Html.IsSelectedPLUS(controller: "Journal")">
+                <a href="/Administraton/Journal/Index">
+                    <i class="fa fa-list-ol"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Journal du Système </span>
+                </a>
+            </li>
+            <li class="">
+                <a href="/Affectation/Index/Index">
+                    <i class="fa fa-line-chart"></i>
+                    <span class="nav-label" data-i18n="nav.animations">Etats et Statistique </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,1271 @@
+﻿@using System.Diagnostics
+@using System.Linq
+@using APP.Areas.Administraton.Models
+@model APP.Areas.Administraton.Models.AdminViewModel
+
+@{
+    ViewBag.Title = "Administration";
+    if (Model.utilisateur != null && Model.utilisateur.Count != 0)
+    {
+        if (Model.utilisateur.Count == 1)
+        {
+            Model.UserActif = Model.utilisateur.First();
+
+            ViewBag.comptesB = 0;
+        }
+        else
+        {
+            foreach (var VARIABLE in Model.utilisateur)
+            {
+                if (VARIABLE.EnActivite == true)
+                {
+                    Model.UtilisateursActifs.Add(VARIABLE);
+
+                }
+            }
+
+            ViewBag.comptesB = Model.utilisateur.Count - Model.UtilisateursActifs.Count;
+        }
+    }
+}
+<br>
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Gestion des Utilisateurs</h2>
+        @*<ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("Index", "Admin")">Home</a>
+            </li>
+            <li>
+                <a>Administration</a>
+            </li>
+            <li class="active">
+                <strong>Utilisateur</strong>
+            </li>
+        </ol>*@
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+            <div class="col-lg-4">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Créer un utilisateur </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form id="form" action="/Administraton/Admin/EnregisterUserPlus" method="post" class="wizard-big" role="form">
+                            <h1></h1>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        @*<div class="form-group">
+                                        <input type="hidden" id="IdUser" name="IdUser" placeholder="ID" class="form-control">
+                                    </div>*@
+                                        <div class="form-group">
+                                            <label>Numéro de la CNI</label>
+                                            <input type="text" id="NumCNIUser" name="NumCNIUser" value="@Model.U.NumCNIUser" placeholder="Numéro de la CNI" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Nom</label>
+                                            <input type="text" id="NomUser" name="NomUser" value="@Model.U.NomUser" placeholder="Nom" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Prénoms</label>
+                                            <input type="text" id="PrenomUser" name="PrenomUser" value="@Model.U.PrenomUser" placeholder="Prénoms" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Sexe</label>
+                                            <select class="form-control" name="SexeUser" required>
+                                                @{
+                                                    if (Model.U != null)
+                                                    {
+                                                        if (Model.U.SexeUser == "Masculin")
+                                                        {
+                                                            <option selected value="Masculin">Masculin </option>
+                                                            <option value="Féminin">Féminin </option>
+                                                        }
+                                                        else if (Model.U.SexeUser == "Féminin")
+                                                        {
+                                                            <option value="Masculin">Masculin </option>
+                                                            <option selected value="Féminin">Féminin </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="Masculin">Masculin </option>
+                                                            <option value="Féminin">Féminin </option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <h1></h1>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="form-group">
+                                            <label>Date de naissance</label>
+                                            <input type="date" class="form-control" name="DateNaissanceUser" value="@Convert.ToDateTime(Model.U.DateNaissanceUser).ToString("yyyy-MM-dd")" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Lieux de naissance</label>
+                                            <input type="text" id="LieuxNaissanceUser" name="LieuxNaissanceUser" value="@Model.U.LieuxNaissanceUser" placeholder="Lieux de naissance" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Adresse</label>
+                                            <input type="text" id="AdresseUser" name="AdresseUser" value="@Model.U.AdresseUser" placeholder="Adresse" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <h1></h1>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="form-group">
+                                            <label>Téléphone</label>
+                                            <input type="tel" id="TelUser" name="TelUser" value="@Model.U.TelUser" placeholder="Téléphone" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>E-mail</label>
+                                            <input type="email" id="EmailUser" name="EmailUser" value="@Model.U.EmailUser" placeholder="E-mail" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Date d'embauche</label>
+                                            <input type="date" class="form-control" value="@Convert.ToDateTime(Model.U.DateEmbaucheUser).ToString("yyyy-MM-dd")" name="DateEmbaucheUser" value="" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <h1></h1>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="form-group">
+                                            <label>Identifiant</label>
+                                            <input type="text" id="Identifiant" name="Identifiant" value="@Model.U.Identifiant" placeholder="Identifiant" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Mot de Passe</label>
+                                            <input type="password" id="MotDePasse" name="MotDePasse" placeholder="Mot de Passe" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Confirmer</label>
+                                            <input type="password" id="MotDePasse1" name="MotDePasse1" placeholder="Mot de Passe" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Profil</label>
+                                            <select name="IdProfil" class="form-control" required>
+                                                @{
+                                                    foreach (var type in Model.profil)
+                                                    {
+                                                        if (type.IdProfil == Model.U.IdProfil)
+                                                        {
+                                                            <option selected value="@type.IdProfil">@type.LibelleProfil</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                                        }
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <div class="row">
+                            @if (ViewData["CompareAge"] != null)
+                            {
+                                <div class="pull-right">
+                                    <div class="alert alert-danger alert-dismissable">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        @ViewData["CompareAge"]
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="widget style1 navy-bg">
+                            <div class="row vertical-align">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-laptop fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    @{
+                                        if (Model.utilisateur == null)
+                                        {
+                                    <h2 class="font-bold">0</h2>
+                                        }
+                                        else
+                                        {
+                                    <h2 class="font-bold">@Model.utilisateur.Count()</h2>
+                                        }
+                                    }
+                                    <span>Actifs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Utilisateur", "Admin", new { Area = "Admin" })">
+                        <div class="col-lg-4">
+                            <div class="widget style1 red-bg">
+                                <div class="row vertical-align">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-lock fa-4x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <h2 class="font-bold">@ViewBag.comptesB</h2>
+                                        <span>Bloqués</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="@Url.Action("Utilisateur", "Admin", new { Area = "Admin" })">
+                        <div class="col-lg-4">
+                            <div class="widget style1 lazur-bg">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-users fa-4x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <h2 class="font-bold">@Model.utilisateur.Count</h2>
+                                        <span> Comptes </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Liste des Utilisateurs </h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-lg-offset-7 col-lg-5">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("Id")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Nom & Prénoms")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Identifiant")
+                                    </th>
+                                    <th>
+                                        Profil
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("E-mail")
+                                    </th>
+                                    <th class="text-right">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.utilisateur.OrderByDescending(x => x.IdUser))
+                                {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IdUser)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.NomUser) @Html.DisplayFor(modelItem => item.PrenomUser)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Identifiant)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Profil.LibelleProfil)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmailUser)
+                                    </td>
+                                    <td class="text-right">
+                                        <div class="btn-group">
+                                            <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdUser)">
+                                                Modifier
+                                            </button>
+                                            <button class="btn btn-white btn-xs" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdUser)">
+                                                Détail
+                                            </button>
+                                            @{
+                                                    if (item.EnActivite == false || item.EnActivite == null)
+                                                    {
+                                                <a class="btn btn-white btn-xs" href="/Administraton/Admin/Delete/@item.IdUser">
+                                                    Débloquer
+                                                </a>
+                                                    }
+                                                    else
+                                                    {
+                                                <a class="btn btn-white btn-xs" href="/Administraton/Admin/Delete/@item.IdUser">
+                                                    Bloquer
+                                                </a>
+                                                    }
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+@*<div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h3>Créer un utilisateur </h3>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm("EnregisterUser", "Admin", new { area = "Administration" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+            {
+                <div class="form-horizontal">
+                    @*<div class="form-group">
+                            <input type="hidden" id="IdUser" name="IdUser" placeholder="ID" class="form-control">
+                        </div>
+                    <div class="form-group">
+                        <label>Numéro de la CNI</label>
+                        <input type="text" id="NumCNIUser" name="NumCNIUser" placeholder="Numéro de la CNI" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" id="NomUser" name="NomUser" placeholder="Nom" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Prénoms</label>
+                        <input type="text" id="PrenomUser" name="PrenomUser" placeholder="Prénoms" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Date de naissance</label>
+                        <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateNaissanceUser" name="DateNaissanceUser">
+                    </div>
+                    <div class="form-group">
+                        <label>Lieux de naissance</label>
+                        <input type="text" id="LieuxNaissanceUser" name="LieuxNaissanceUser" placeholder="Lieux de naissance" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Sexe</label>
+                        <select class="form-control" name="SexeUser">
+                            <option value="Masculin">Masculin </option>
+                            <option value="Féminin">Féminin </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Adresse</label>
+                        <input type="text" id="AdresseUser" name="AdresseUser" placeholder="Adresse" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" id="TelUser" name="TelUser" placeholder="Téléphone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="EmailUser" name="EmailUser" placeholder="E-mail" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Date d'embauche</label>
+                        <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateEmbaucheUser" name="DateEmbaucheUser">
+                    </div>
+                    <div class="form-group">
+                        <label>Identifiant</label>
+                        <input type="text" id="Identifiant" name="Identifiant" placeholder="Identifiant" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de Passe</label>
+                        <input type="password" id="MotDePasse" name="MotDePasse" placeholder="Mot de Passe" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmer</label>
+                        <input type="password" id="MotDePasse1" name="MotDePasse1" placeholder="Mot de Passe" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Profil</label>
+                        <select name="IdProfil" class="form-control">
+                            @{
+                                foreach (var type in Model.profil)
+                                {
+                                    <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-7 col-sm-offset-5">
+                        <button class="btn btn-white" type="reset">Annuler </button>
+                        <button class="btn btn-primary" type="submit">Ajouter </button>
+                    </div>
+                </div>
+                                }
+        </div>
+    </div>*@
+
+<div class="modal inmodal" id="addUser" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Ajouter un utilisateur</h4>
+            </div>
+            @using (Html.BeginForm("EnregisterUser", "Admin", new { area = "Administration" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+            {
+                <div class="modal-body">
+                    @Html.AntiForgeryToken()
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <input type="hidden" id="IdUser" name="IdUser" placeholder="ID" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Numéro de la CNI</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="NumCNIUser" name="NumCNIUser" placeholder="Numéro de la CNI" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Nom</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="NomUser" name="NomUser" placeholder="Nom" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Prénoms</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="PrenomUser" name="PrenomUser" placeholder="Prénoms" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Date de naissance</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateNaissanceUser" name="DateNaissanceUser">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Lieux de naissance</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="LieuxNaissanceUser" name="LieuxNaissanceUser" placeholder="Lieux de naissance" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Sexe</label>
+                            <div class="col-sm-8">
+                                <select class="form-control m-b" name="SexeUser">
+                                    <option value="Masculin">Masculin </option>
+                                    <option value="Féminin">Féminin </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Adresse</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="AdresseUser" name="AdresseUser" placeholder="Adresse" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Téléphone</label>
+                            <div class="col-sm-8">
+                                <input type="tel" id="TelUser" name="TelUser" placeholder="Téléphone" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">E-mail</label>
+                            <div class="col-sm-8">
+                                <input type="email" id="EmailUser" name="EmailUser" placeholder="E-mail" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Date d'embauche</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateEmbaucheUser" name="DateEmbaucheUser">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Identifiant</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="Identifiant" name="Identifiant" placeholder="Identifiant" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Mot de Passe</label>
+                            <div class="col-sm-8">
+                                <input type="password" id="MotDePasse" name="MotDePasse" placeholder="Mot de Passe" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Confirmer</label>
+                            <div class="col-sm-8">
+                                <input type="password" id="MotDePasse1" name="MotDePasse1" placeholder="Mot de Passe" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Profil</label>
+                            <div class="col-xs-8">
+                                <select name="IdProfil" class="form-control">
+                                    @{
+                                        foreach (var type in Model.profil)
+                                        {
+                                            <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                                        }
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.utilisateur != null, "Model.utilisateur != null");
+    foreach (var tmp in Model.utilisateur)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdUser" tabindex="@tmp.IdUser" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier un utilisateur</h4>
+                    </div>
+                    @using (Html.BeginForm("EnregisterUser", "Admin", new { area = "Administration" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                    {
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdUser" name="IdUser" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de la CNI</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="NumCNIUser" name="NumCNIUser" placeholder="Numéro de la CNI" class="form-control" value="@tmp.NumCNIUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="NomUser" name="NomUser" placeholder="Nom" class="form-control" value="@tmp.NomUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="PrenomUser" name="PrenomUser" placeholder="Prénoms" class="form-control" value="@tmp.PrenomUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateNaissanceUser" name="DateNaissanceUser" value="@tmp.DateNaissanceUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Lieux de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="LieuxNaissanceUser" name="LieuxNaissanceUser" placeholder="Lieux de naissance" class="form-control" value="@tmp.LieuxNaissanceUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Sexe</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" name="SexeUser" value="@tmp.SexeUser">
+                                            <option value="Masculin">Masculin </option>
+                                            <option value="Féminin">Féminin </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Adresse</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="AdresseUser" name="AdresseUser" placeholder="Adresse" class="form-control" value="@tmp.AdresseUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Téléphone</label>
+                                    <div class="col-sm-8">
+                                        <input type="tel" id="TelUser" name="TelUser" placeholder="Téléphone" class="form-control" value="@tmp.TelUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">E-mail</label>
+                                    <div class="col-sm-8">
+                                        <input type="email" id="EmailUser" name="EmailUser" placeholder="E-mail" class="form-control" value="@tmp.EmailUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date d'embauche</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateEmbaucheUser" name="DateEmbaucheUser" value="@tmp.DateEmbaucheUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Identifiant</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" id="Identifiant" name="Identifiant" placeholder="Identifiant" class="form-control" value="@tmp.Identifiant">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Mot de Passe</label>
+                                    <div class="col-sm-8">
+                                        <input type="password" id="MotDePasse" name="MotDePasse" placeholder="Mot de Passe" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Confirmer</label>
+                                    <div class="col-sm-8">
+                                        <input type="password" id="MotDePasse1" name="MotDePasse1" placeholder="Mot de Passe" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-4 control-label">Profil</label>
+                                    <div class="col-xs-8">
+                                        <select name="IdProfil" class="form-control" value="@tmp.IdProfil">
+                                            @{
+                                                foreach (var type in Model.profil)
+                                                {
+                                                    <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    if (type.IdProfil == tmp.IdProfil)
+                                                    {
+                                                        <option selected="selected" value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                                                }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="dl-@tmp.IdUser" tabindex="@tmp.IdUser" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Détail d'un utilisateur</h4>
+                    </div>
+                    @using (Html.BeginForm("EnregisterUser", "Admin", new { area = "Administration" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form" }))
+                    {
+                        <div class="modal-body">
+                            @Html.AntiForgeryToken()
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdUser" name="IdUser" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Numéro de la CNI</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="NumCNIUser" name="NumCNIUser" placeholder="Numéro de la CNI" class="form-control" value="@tmp.NumCNIUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Nom</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="NomUser" name="NomUser" placeholder="Nom" class="form-control" value="@tmp.NomUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Prénoms</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="PrenomUser" name="PrenomUser" placeholder="Prénoms" class="form-control" value="@tmp.PrenomUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateNaissanceUser" name="DateNaissanceUser" value="@tmp.DateNaissanceUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Lieux de naissance</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="LieuxNaissanceUser" name="LieuxNaissanceUser" placeholder="Lieux de naissance" class="form-control" value="@tmp.LieuxNaissanceUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Sexe</label>
+                                    <div class="col-sm-8">
+                                        <select disabled class="form-control m-b" name="SexeUser" value="@tmp.SexeUser">
+                                            <option value="Masculin">Masculin </option>
+                                            <option value="Féminin">Féminin </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Adresse</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="AdresseUser" name="AdresseUser" placeholder="Adresse" class="form-control" value="@tmp.AdresseUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Téléphone</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="tel" id="TelUser" name="TelUser" placeholder="Téléphone" class="form-control" value="@tmp.TelUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">E-mail</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="email" id="EmailUser" name="EmailUser" placeholder="E-mail" class="form-control" value="@tmp.EmailUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Date d'embauche</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" class="form-control" data-mask="99/99/9999" placeholder="" id="DateEmbaucheUser" name="DateEmbaucheUser" value="@tmp.DateEmbaucheUser">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Identifiant</label>
+                                    <div class="col-sm-8">
+                                        <input disabled type="text" id="Identifiant" name="Identifiant" placeholder="Identifiant" class="form-control" value="@tmp.Identifiant">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-4 control-label">Profil</label>
+                                    <div class="col-xs-8">
+                                        <select disabled name="IdProfil" class="form-control" value="@tmp.IdProfil">
+                                            @{
+                                                foreach (var type in Model.profil)
+                                                {
+                                                    <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    if (type.IdProfil == tmp.IdProfil)
+                                                    {
+                                                        <option selected="selected" value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@type.IdProfil">@type.LibelleProfil</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                        </div>
+                                                }
+                </div>
+            </div>
+        </div>
+                                                }
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/footableStyles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/dataTables")
+
+    @Scripts.Render("~/plugins/iCheck")
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+    @Scripts.Render("~/plugins/footable")
+
+    ----------------------------
+    @Scripts.Render("~/plugins/wizardSteps")
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/validate")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#wizard").steps();
+            $("#form").steps({
+                bodyTag: "fieldset",
+                onStepChanging: function (event, currentIndex, newIndex) {
+                    // Always allow going backward even if the current step contains invalid fields!
+                    if (currentIndex > newIndex) {
+                        return true;
+                    }
+
+                    // Forbid suppressing "Warning" step if the user is to young
+                    if (newIndex === 3 && Number($("#age").val()) < 18) {
+                        return false;
+                    }
+
+                    var form = $(this);
+
+                    // Clean up if user went backward before
+                    if (currentIndex < newIndex) {
+                        // To remove error styles
+                        $(".body:eq(" + newIndex + ") label.error", form).remove();
+                        $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+                    }
+
+                    // Disable validation on fields that are disabled or hidden.
+                    form.validate().settings.ignore = ":disabled,:hidden";
+
+                    // Start validation; Prevent going forward if false
+                    return form.valid();
+                },
+                onStepChanged: function (event, currentIndex, priorIndex) {
+                    // Suppress (skip) "Warning" step if the user is old enough.
+                    if (currentIndex === 2 && Number($("#age").val()) >= 18) {
+                        $(this).steps("next");
+                    }
+
+                    // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+                    if (currentIndex === 2 && priorIndex === 3) {
+                        $(this).steps("previous");
+                    }
+                },
+                onFinishing: function (event, currentIndex) {
+                    var form = $(this);
+
+                    // Disable validation on fields that are disabled.
+                    // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+                    form.validate().settings.ignore = ":disabled";
+
+                    // Start validation; Prevent form submission if false
+                    return form.valid();
+                },
+                onFinished: function (event, currentIndex) {
+                    var form = $(this);
+
+                    // Submit form input
+                    form.submit();
+                }
+            }).validate({
+                errorPlacement: function (error, element) {
+                    element.before(error);
+                },
+                rules: {
+                    confirm: {
+                        equalTo: "#password"
+                    }
+                }
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.footable').footable();
+            $('.footable2').footable();
+
+
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var $image = $(".image-crop > img")
+            $($image).cropper({
+                aspectRatio: 1.618,
+                preview: ".img-preview",
+                done: function (data) {
+                    // Output the result data for cropping image.
+                }
+            });
+
+            var $inputImage = $("#inputImage");
+            if (window.FileReader) {
+                $inputImage.change(function () {
+                    var fileReader = new FileReader(),
+                        files = this.files,
+                        file;
+
+                    if (!files.length) {
+                        return;
+                    }
+
+                    file = files[0];
+
+                    if (/^image\/\w+$/.test(file.type)) {
+                        fileReader.readAsDataURL(file);
+                        fileReader.onload = function () {
+                            $inputImage.val("");
+                            $image.cropper("reset", true).cropper("replace", this.result);
+                        };
+                    } else {
+                        showMessage("Please choose an image file.");
+                    }
+                });
+            } else {
+                $inputImage.addClass("hide");
+            }
+
+            $("#download").click(function () {
+                window.open($image.cropper("getDataURL"));
+            });
+
+            $("#zoomIn").click(function () {
+                $image.cropper("zoom", 0.1);
+            });
+
+            $("#zoomOut").click(function () {
+                $image.cropper("zoom", -0.1);
+            });
+
+            $("#rotateLeft").click(function () {
+                $image.cropper("rotate", 45);
+            });
+
+            $("#rotateRight").click(function () {
+                $image.cropper("rotate", -45);
+            });
+
+            $("#setDrag").click(function () {
+                $image.cropper("setDragMode", "crop");
+            });
+
+            $('#data_1 .input-group.date').datepicker({
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                calendarWeeks: true,
+                autoclose: true
+            });
+
+            $('#data_2 .input-group.date').datepicker({
+                startView: 1,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_3 .input-group.date').datepicker({
+                startView: 2,
+                todayBtn: "linked",
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            $('#data_4 .input-group.date').datepicker({
+                minViewMode: 1,
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true,
+                todayHighlight: true
+            });
+
+            $('#data_5 .input-daterange').datepicker({
+                keyboardNavigation: false,
+                forceParse: false,
+                autoclose: true
+            });
+
+            var elem = document.querySelector('.js-switch');
+            var switchery = new Switchery(elem, { color: '#1AB394' });
+
+            var elem_2 = document.querySelector('.js-switch_2');
+            var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+            var elem_3 = document.querySelector('.js-switch_3');
+            var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+            var elem_4 = document.querySelector('.js-switch_4');
+            var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+            switchery_4.disable();
+
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+
+            $('.demo1').colorpicker();
+
+            var divStyle = $('.back-change')[0].style;
+            $('#demo_apidemo').colorpicker({
+                color: divStyle.backgroundColor
+            }).on('changeColor', function (ev) {
+                divStyle.backgroundColor = ev.color.toHex();
+            });
+
+            $('.clockpicker').clockpicker();
+
+            $('input[name="daterange"]').daterangepicker();
+
+            $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+            $('#reportrange').daterangepicker({
+                format: 'DD/MM/YYYY',
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment(),
+                minDate: '01/01/2012',
+                maxDate: '31/12/2015',
+                dateLimit: { days: 60 },
+                showDropdowns: true,
+                showWeekNumbers: true,
+                timePicker: false,
+                timePickerIncrement: 1,
+                timePicker12Hour: true,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                opens: 'right',
+                drops: 'down',
+                buttonClasses: ['btn', 'btn-sm'],
+                applyClass: 'btn-primary',
+                cancelClass: 'btn-default',
+                separator: ' to ',
+                locale: {
+                    applyLabel: 'Submit',
+                    cancelLabel: 'Cancel',
+                    fromLabel: 'From',
+                    toLabel: 'To',
+                    customRangeLabel: 'Custom',
+                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    firstDay: 1
+                }
+            }, function (start, end, label) {
+                console.log(start.toISOString(), end.toISOString(), label);
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            });
+
+
+            $(".select2_demo_1").select2();
+            $(".select2_demo_2").select2();
+            $(".select2_demo_3").select2({
+                placeholder: "Select a state",
+                allowClear: true
+            });
+
+            $(".touchspin1").TouchSpin({
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin2").TouchSpin({
+                min: 0,
+                max: 100,
+                step: 0.1,
+                decimals: 2,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: '%',
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $(".touchspin3").TouchSpin({
+                verticalbuttons: true,
+                buttondown_class: 'btn btn-white',
+                buttonup_class: 'btn btn-white'
+            });
+
+            $('.tagsinput').tagsinput({
+                tagClass: 'label label-primary'
+            });
+
+            $('.dual_select').bootstrapDualListbox({
+                selectorMinimalHeight: 160
+            });
+
+
+        });
+
+
+        $('.chosen-select').chosen({ width: "100%" });
+
+        $("#ionrange_1").ionRangeSlider({
+            min: 0,
+            max: 5000,
+            type: 'double',
+            prefix: "$",
+            maxPostfix: "+",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_2").ionRangeSlider({
+            min: 0,
+            max: 10,
+            type: 'single',
+            step: 0.1,
+            postfix: " carats",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_3").ionRangeSlider({
+            min: -50,
+            max: 50,
+            from: 0,
+            postfix: "°",
+            prettify: false,
+            hasGrid: true
+        });
+
+        $("#ionrange_4").ionRangeSlider({
+            values: [
+                "January", "February", "March",
+                "April", "May", "June",
+                "July", "August", "September",
+                "October", "November", "December"
+            ],
+            type: 'single',
+            hasGrid: true
+        });
+
+        $("#ionrange_5").ionRangeSlider({
+            min: 10000,
+            max: 100000,
+            step: 100,
+            postfix: " km",
+            from: 55000,
+            hideMinMax: true,
+            hideFromTo: false
+        });
+
+        $(".dial").knob();
+
+        $("#basic_slider").noUiSlider({
+            start: 40,
+            behaviour: 'tap',
+            connect: 'upper',
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#range_slider").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+
+        $("#drag-fixed").noUiSlider({
+            start: [40, 60],
+            behaviour: 'drag-fixed',
+            connect: true,
+            range: {
+                'min': 20,
+                'max': 80
+            }
+        });
+    </script>
+
+    @*@Scripts.Render("~/bundles/jqueryui")*@
+    @Scripts.Render("~/plugins/validate")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#form").validate({
+                rules: {
+                    MotDePasse: {
+                        required: true,
+                        minlength: 3
+                    },
+                    MotDePasse1: {
+                        required: true,
+                        minlength: 3,
+                        equalTo: "#MotDePasse"
+                    },
+                    NumCNIUser: {
+                        required: true,
+                    },
+                    NomUser: {
+                        required: true,
+                    },
+                    PrenomUser: {
+                        required: true,
+                    },
+                    DateNaissanceUser: {
+                        required: true,
+                    },
+                    LieuxNaissanceUser: {
+                        required: true,
+                    },
+                    AdresseUser: {
+                        required: true,
+                    },
+                    TelUser: {
+                        required: true,
+                    },
+                    EmailUser: {
+                        required: true,
+                    },
+                    DateEmbaucheUser: {
+                        required: true,
+                    },
+                    DateNaissanceUser: {
+                        required: true,
+                    },
+                    Identifiant: {
+                        required: true,
+                    }
+                }
+            });
+
+        });
+    </script>
+}

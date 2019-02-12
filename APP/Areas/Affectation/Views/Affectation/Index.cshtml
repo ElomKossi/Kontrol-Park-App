@@ -1,0 +1,918 @@
+﻿@model APP.Areas.Affectation.Models.AllViewsModel
+@using System.Diagnostics
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_2.cshtml";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-offset-3 col-lg-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h3>Création d'une affectation </h3>
+                    </div>
+                    <div class="ibox-content">
+                        @using (Html.BeginForm("Ajouter", "Affectation", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal", @role = "form", @id = "form", @name = "formu" }))
+                        {
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <input type="hidden" id="IdAffectation" name="IdAffectation" placeholder="ID" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Intitulé de mission </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdMission" class="select2_demo_3 form-control">
+                                            <option></option>
+                                            @{
+                                                foreach (var type in Model.mission.Where(p => (p.Cloturer == false || p.Cloturer == null) && (p.Supprimer == false || p.Supprimer == null)).ToList())
+                                                {
+                                                    if (Model.affectationP != null)
+                                                    {
+                                                        if (type.IdMission == Model.affectationP.IdMission)
+                                                        {
+                                                            <option selected value="@type.IdMission">
+                                                                @type.LibelleMission
+                                                            </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@type.IdMission">
+                                                                @type.LibelleMission
+                                                            </option>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@type.IdMission">
+                                                            @type.LibelleMission
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Véhicule </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdVehicule" class="select2_demo_3 form-control">
+                                            <option></option>
+                                            @{
+                                                foreach (var cat in Model.Vehicule.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    if (Model.affectationP != null)
+                                                    {
+                                                        if (cat.IdVehicule == Model.affectationP.IdVehicule)
+                                                        {
+                                                            <option selected value="@cat.IdVehicule">
+                                                                @cat.MarqueVehicule.LibelleMarque @cat.NomVehicule @cat.Immatriculation
+                                                            </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@cat.IdVehicule">
+                                                                @cat.MarqueVehicule.LibelleMarque @cat.NomVehicule @cat.Immatriculation
+                                                            </option>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@cat.IdVehicule">
+                                                            @cat.MarqueVehicule.LibelleMarque @cat.NomVehicule @cat.Immatriculation
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Conducteur </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdConducteur" class="select2_demo_3 form-control">
+                                            <option></option>
+                                            @{
+
+                                                foreach (var catp in Model.conducteur.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    if (Model.affectationP != null)
+                                                    {
+                                                        if (catp.IdConducteur == Model.affectationP.IdConducteur)
+                                                        {
+                                                            <option selected value="@catp.IdConducteur">
+                                                                @catp.NomConducteur @catp.PrenomConducteur
+                                                            </option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@catp.IdConducteur">
+                                                                @catp.NomConducteur @catp.PrenomConducteur
+                                                            </option>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@catp.IdConducteur">
+                                                            @catp.NomConducteur @catp.PrenomConducteur
+                                                        </option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Date d'affectation * </label>
+                                    <div class="col-sm-7">
+                                        <input type="date" class="form-control" name="DateAffectation" id="DateAffectation" value="@Convert.ToDateTime(Model.affectationP.DateAffectation).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                    <div class="col-sm-7">
+                                        <input type="hidden" class="form-control" name="DateDebutMission" id="DateDebutMission" value="@Model.mission.Find(p => p.IdMission == id).DateDebutMission">
+                                    </div>
+                                </div>*@
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>*@
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                @if (ViewData["smserror"] != null)
+                                {
+                                    <div class="alert alert-danger alert-dismissable">
+                                        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                                        @ViewData["smserror"]
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-7 col-sm-offset-5">
+                                    <button class="btn btn-white" type="reset">Annuler </button>
+                                    <button class="btn btn-primary" type="submit">Ajouter </button>
+                                </div>
+                            </div>
+                                                }
+                    </div>
+                    <div class="ibox-footer">
+                        <b>*</b> : La date d'affectation doit être inférieur à la date de début de mission
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-1 col-lg-10">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <a class="btn btn-primary btn-sm pull-right" href="@Url.Action("ExportListA", "Affectation")" target="_blank">
+                            Imprimer
+                        </a>
+                        <h2>Liste des missions avec les vehicules et ou les conducteurs affectés </h2>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="col-lg-offset-7 col-lg-5">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Rechercher">
+                        </div>
+                        <table class="footable table table-stripped" data-page-size="8" data-filter=#filter>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayName("ID")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Intitulé de mission")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Véhicule")
+                                    </th>
+                                    <th>
+                                        Conducteur
+                                    </th>
+                                    <th>
+                                        Date d'affectation
+                                    </th>
+                                    <th class="text-right">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.affectation.OrderByDescending(x => x.IdAffectation))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdAffectation)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mission.LibelleMission)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Vehicule.MarqueVehicule.LibelleMarque) @Html.DisplayFor(modelItem => item.Vehicule.NomVehicule) @Html.DisplayFor(modelItem => item.Vehicule.Immatriculation)
+                                        </td>
+                                        @if (item.Conducteur == null)
+                                        {
+                                            <td>
+                                                ----------
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Conducteur.NomConducteur) @Html.DisplayFor(modelItem => item.Conducteur.PrenomConducteur)
+                                            </td>
+                                        }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.DateAffectation)
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="btn-group">
+                                                <button class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#e-@Html.DisplayFor(modelItem => item.IdAffectation)">
+                                                    Modifier
+                                                </button>
+                                                @*<button class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#dl-@Html.DisplayFor(modelItem => item.IdAffectation)">
+                                                    Détail
+                                                </button>*@
+                                                <button class="btn btn-white btn-bitbucket" data-toggle="modal" data-target="#de-@Html.DisplayFor(modelItem => item.IdAffectation)">
+                                                    Supprimer
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    Debug.Assert(Model.affectation != null, "Model.affectation != null");
+    foreach (var tmp in Model.affectation)
+    {
+        <div class="modal inmodal fade" id="e-@tmp.IdAffectation" tabindex="@tmp.IdAffectation" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Modifier une affectation</h4>
+                    </div>
+                    @using (Html.BeginForm("Editer", "Affectation", new { area = "Affectation" }, FormMethod.Post, new { @class = "form-horizontal" }))
+                    {
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-sm-7">
+                                        <input type="hidden" id="IdAffectation" name="IdAffectation" placeholder="ID" class="form-control" value="@tmp.IdAffectation">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Intitulé de mission </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdMission" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdMission">@tmp.Mission.LibelleMission</option>
+                                                foreach (var type in Model.mission.Where(p => p.Cloturer == false && p.Supprimer == false).ToList())
+                                                {
+                                                    <option value="@type.IdMission">@type.LibelleMission</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Véhicule </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdVehicule" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdVehicule">
+                                                    @tmp.Vehicule.MarqueVehicule.LibelleMarque @tmp.Vehicule.NomVehicule @tmp.Vehicule.Immatriculation
+                                                </option>
+                                                foreach (var type in Model.Vehicule.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdVehicule">
+                                                        @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Conducteur </label>
+                                    <div class="col-lg-7">
+                                        <select name="IdConducteur" class="form-control">
+                                            @{
+                                                if (tmp.Conducteur == null)
+                                                {
+                                                    <option selected="selected" value="@tmp.IdConducteur">
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option selected="selected" value="@tmp.IdConducteur">
+                                                        @tmp.Conducteur.NomConducteur @tmp.Conducteur.PrenomConducteur
+                                                    </option>
+                                                }
+                                                foreach (var type in Model.conducteur.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdConducteur">
+                                                        @type.NomConducteur @type.PrenomConducteur
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">Date d'affectation </label>
+                                    <div class="col-sm-7">
+                                        @{ 
+                                            string frmt = Convert.ToDateTime(tmp.DateAffectation).ToString("yyyy-MM-dd h:mm tt");
+                                        }
+                                        <input type="date" class="form-control" placeholder="" name="DateAffectation" value="@Convert.ToDateTime(tmp.DateAffectation).ToString("yyyy-MM-dd")">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>*@
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-primary" value="Modifier">Modifier</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="dl-@tmp.IdAffectation" tabindex="@tmp.IdAffectation" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Détail d'un conducteur</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="/Affectation/Editer" method="post">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-sm-5 control-label">ID</label>
+                                    <div class="col-sm-7">
+                                        <input disabled type="text" id="IdAffectation" name="IdAffectation" placeholder="ID" class="form-control" value="@tmp.IdAffectation">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Intitulé de mission </label>
+                                    <div class="col-lg-7">
+                                        <select disabled name="IdMission" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdMission">@tmp.Mission.LibelleMission</option>
+                                                foreach (var type in Model.mission.Where(p => p.Cloturer == false && p.Supprimer == false).ToList())
+                                                {
+                                                    <option value="@type.IdMission">@type.LibelleMission</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Véhicule </label>
+                                    <div class="col-lg-7">
+                                        <select disabled name="IdVehicule" class="form-control">
+                                            @{
+                                                <option selected="selected" value="@tmp.IdVehicule">
+                                                    @tmp.Vehicule.MarqueVehicule.LibelleMarque @tmp.Vehicule.NomVehicule @tmp.Vehicule.Immatriculation
+                                                </option>
+                                                foreach (var type in Model.Vehicule.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdVehicule">
+                                                        @type.MarqueVehicule.LibelleMarque @type.NomVehicule @type.Immatriculation
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-lg-5 control-label">Conducteur </label>
+                                    <div class="col-lg-7">
+                                        <select disabled name="IdConducteur" class="form-control">
+                                            @{
+                                                if (tmp.Conducteur == null)
+                                                {
+                                                    <option selected="selected" value="@tmp.IdConducteur">
+                                                        Aucun conducteur affecté
+                                                    </option>
+                                                }
+                                                else
+                                                {
+                                                    <option selected="selected" value="@tmp.IdConducteur">
+                                                        @tmp.Conducteur.NomConducteur @tmp.Conducteur.PrenomConducteur
+                                                    </option>
+                                                }
+                                                foreach (var type in Model.conducteur.Where(p => p.EnActivite == true && p.EnMission == false).ToList())
+                                                {
+                                                    <option value="@type.IdConducteur">
+                                                        @type.NomConducteur @type.PrenomConducteur
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @*<label class="col-sm-4 control-label">En Activité</label>*@
+                                    <div class="col-sm-8">
+                                        <input type="hidden" id="Supprimer" name="Supprimer" class="js-switch" checked="" value="False" />
+                                        @Html.ValidationMessage("Supprimer", "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal inmodal fade" id="de-@tmp.IdAffectation" tabindex="@tmp.IdAffectation" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content animated bounceInRight">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Supprimer un conducteur</h4>
+                    </div>
+                    @Html.HiddenFor(model => model.conducteurPermis)
+                    <div class="modal-body">
+                        <h3>Supprimer?</h3>
+                        <div>
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayName("ID")
+                                </dt>
+                                <dd>
+                                    @tmp.IdAffectation
+                                </dd>
+                                <dt>
+                                    @Html.DisplayName("Intitulé de la mission")
+                                </dt>
+                                <dd>
+                                    @tmp.Mission.LibelleMission
+                                </dd>
+                                <dt>
+                                    Véhicule
+                                </dt>
+                                <dd>
+                                    @tmp.Vehicule.MarqueVehicule.LibelleMarque @tmp.Vehicule.NomVehicule @tmp.Vehicule.Immatriculation
+                                </dd>
+                                <dt>
+                                    Conducteur
+                                </dt>
+                                @if (tmp.Conducteur == null)
+                                {
+                                    <dd>
+                                        -------
+                                    </dd>
+                                }
+                                else
+                                {
+                                    <dd>
+                                        @tmp.Conducteur.NomConducteur @tmp.Conducteur.PrenomConducteur
+                                    </dd>
+                                }
+                            </dl>
+                        </div>
+                        @using (Html.BeginForm("Delete", "Affectation", new { id = tmp.IdAffectation }, FormMethod.Post, new { @class = "form-horizontal" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-white" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary" value="Ajouter">Supprimer</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+}
+
+@section Styles {
+    @Styles.Render("~/plugins/select2Styles")
+}
+
+@section Scripts {
+    @Scripts.Render("~/plugins/iCheck")
+
+    @Scripts.Render("~/plugins/iCheck")
+    @Scripts.Render("~/plugins/dataPicker")
+    @Scripts.Render("~/plugins/ionRange")
+    @Scripts.Render("~/plugins/nouiSlider")
+    @Scripts.Render("~/plugins/jasnyBootstrap")
+    @Scripts.Render("~/plugins/switchery")
+    @Scripts.Render("~/plugins/chosen")
+    @Scripts.Render("~/plugins/knob")
+    @Scripts.Render("~/plugins/imagecropper")
+    @Scripts.Render("~/plugins/colorpicker")
+    @Scripts.Render("~/plugins/clockpicker")
+    @Scripts.Render("~/plugins/dateRange")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/touchSpin")
+    @Scripts.Render("~/plugins/tagInputs")
+    @Scripts.Render("~/plugins/duallist")
+    @Scripts.Render("~/plugins/footable")
+    @Scripts.Render("~/plugins/select2")
+    @Scripts.Render("~/plugins/validate")
+    @Scripts.Render("~/plugins/toastr")
+
+    @*<script type="text/javascript">
+        $(document).ready(function () {
+
+            var i = -1;
+            var toastCount = 0;
+            var $toastlast;
+            var getMessage = function () {
+                var msg = @ViewBag.SMSError;
+                return msg;
+            };
+
+            $('#showsimple').click(function () {
+                // Display a success toast, with a title
+                toastr.success(getMessage)
+            });
+        }
+    </script>*@
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.footable').footable();
+            $('.footable2').footable();
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#form").validate({
+                rules: {
+                    IdMission: {
+                        required: true,
+                    },
+                    IdVehicule: {
+                        required: true,
+                    },
+                    DateAffectation: {
+                        required: true,
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        with (document.formu) {
+            onsubmit = function () {
+                // les dates étant saisies en français, on les transforme
+                // Ici sont acceptés comme séparateurs le tiret, le slash et l'espace
+                tabdeb = (DateAffectation.value.split(/[- //]/));
+                tabfin = (DateDebutMission.value.split(/[- //]/)); 
+
+                tabdeb = (c.split(/[- //]/));
+                tabfin = (c.split(/[- //]/));
+
+                Odeb = new Date(tabdeb[2], tabdeb[1], tabdeb[0]);
+                Ofin = new Date(tabfin[2], tabfin[1], tabfin[0]);
+
+                if (Odeb > Ofin) {
+                    alert('La fin ne doit pas être antérieure au début.');
+                    debut.focus(); debut.style.backgroundColor = '#fee';
+                    return false
+                };
+            };
+        };
+        </script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".select2_demo_1").select2();
+            $(".select2_demo_2").select2();
+            $(".select2_demo_3").select2({
+                placeholder: "Faites votre choix",
+                allowClear: true
+            });
+        });
+</script>
+
+    <script type="text/javascript">
+                    $(document).ready(function () {
+
+                        var $image = $(".image-crop > img")
+                        $($image).cropper({
+                            aspectRatio: 1.618,
+                            preview: ".img-preview",
+                            done: function (data) {
+                                // Output the result data for cropping image.
+                            }
+                        });
+
+                        var $inputImage = $("#inputImage");
+                        if (window.FileReader) {
+                            $inputImage.change(function () {
+                                var fileReader = new FileReader(),
+                                    files = this.files,
+                                    file;
+
+                                if (!files.length) {
+                                    return;
+                                }
+
+                                file = files[0];
+
+                                if (/^image\/\w+$/.test(file.type)) {
+                                    fileReader.readAsDataURL(file);
+                                    fileReader.onload = function () {
+                                        $inputImage.val("");
+                                        $image.cropper("reset", true).cropper("replace", this.result);
+                                    };
+                                } else {
+                                    showMessage("Please choose an image file.");
+                                }
+                            });
+                        } else {
+                            $inputImage.addClass("hide");
+                        }
+
+                        $("#download").click(function () {
+                            window.open($image.cropper("getDataURL"));
+                        });
+
+                        $("#zoomIn").click(function () {
+                            $image.cropper("zoom", 0.1);
+                        });
+
+                        $("#zoomOut").click(function () {
+                            $image.cropper("zoom", -0.1);
+                        });
+
+                        $("#rotateLeft").click(function () {
+                            $image.cropper("rotate", 45);
+                        });
+
+                        $("#rotateRight").click(function () {
+                            $image.cropper("rotate", -45);
+                        });
+
+                        $("#setDrag").click(function () {
+                            $image.cropper("setDragMode", "crop");
+                        });
+
+                        $('#data_1 .input-group.date').datepicker({
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            calendarWeeks: true,
+                            autoclose: true
+                        });
+
+                        $('#data_2 .input-group.date').datepicker({
+                            startView: 1,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_3 .input-group.date').datepicker({
+                            startView: 2,
+                            todayBtn: "linked",
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        $('#data_4 .input-group.date').datepicker({
+                            minViewMode: 1,
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true,
+                            todayHighlight: true
+                        });
+
+                        $('#data_5 .input-daterange').datepicker({
+                            keyboardNavigation: false,
+                            forceParse: false,
+                            autoclose: true
+                        });
+
+                        var elem = document.querySelector('.js-switch');
+                        var switchery = new Switchery(elem, { color: '#1AB394' });
+
+                        var elem_2 = document.querySelector('.js-switch_2');
+                        var switchery_2 = new Switchery(elem_2, { color: '#ED5565' });
+
+                        var elem_3 = document.querySelector('.js-switch_3');
+                        var switchery_3 = new Switchery(elem_3, { color: '#1AB394' });
+
+                        var elem_4 = document.querySelector('.js-switch_4');
+                        var switchery_4 = new Switchery(elem_4, { color: '#f8ac59' });
+                        switchery_4.disable();
+
+                        $('.i-checks').iCheck({
+                            checkboxClass: 'icheckbox_square-green',
+                            radioClass: 'iradio_square-green',
+                        });
+
+                        $('.demo1').colorpicker();
+
+                        var divStyle = $('.back-change')[0].style;
+                        $('#demo_apidemo').colorpicker({
+                            color: divStyle.backgroundColor
+                        }).on('changeColor', function (ev) {
+                            divStyle.backgroundColor = ev.color.toHex();
+                        });
+
+                        $('.clockpicker').clockpicker();
+
+                        $('input[name="daterange"]').daterangepicker();
+
+                        $('#reportrange span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+
+                        $('#reportrange').daterangepicker({
+                            format: 'DD/MM/YYYY',
+                            startDate: moment().subtract(29, 'days'),
+                            endDate: moment(),
+                            minDate: '01/01/2012',
+                            maxDate: '31/12/2015',
+                            dateLimit: { days: 60 },
+                            showDropdowns: true,
+                            showWeekNumbers: true,
+                            timePicker: false,
+                            timePickerIncrement: 1,
+                            timePicker12Hour: true,
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                            },
+                            opens: 'right',
+                            drops: 'down',
+                            buttonClasses: ['btn', 'btn-sm'],
+                            applyClass: 'btn-primary',
+                            cancelClass: 'btn-default',
+                            separator: ' to ',
+                            locale: {
+                                applyLabel: 'Submit',
+                                cancelLabel: 'Cancel',
+                                fromLabel: 'From',
+                                toLabel: 'To',
+                                customRangeLabel: 'Custom',
+                                daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+                                monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                                firstDay: 1
+                            }
+                        }, function (start, end, label) {
+                            console.log(start.toISOString(), end.toISOString(), label);
+                            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                        });
+
+
+                        $(".touchspin1").TouchSpin({
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin2").TouchSpin({
+                            min: 0,
+                            max: 100,
+                            step: 0.1,
+                            decimals: 2,
+                            boostat: 5,
+                            maxboostedstep: 10,
+                            postfix: '%',
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $(".touchspin3").TouchSpin({
+                            verticalbuttons: true,
+                            buttondown_class: 'btn btn-white',
+                            buttonup_class: 'btn btn-white'
+                        });
+
+                        $('.tagsinput').tagsinput({
+                            tagClass: 'label label-primary'
+                        });
+
+                        $('.dual_select').bootstrapDualListbox({
+                            selectorMinimalHeight: 160
+                        });
+
+
+                    });
+
+
+                    $('.chosen-select').chosen({ width: "100%" });
+
+                    $("#ionrange_1").ionRangeSlider({
+                        min: 0,
+                        max: 5000,
+                        type: 'double',
+                        prefix: "$",
+                        maxPostfix: "+",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_2").ionRangeSlider({
+                        min: 0,
+                        max: 10,
+                        type: 'single',
+                        step: 0.1,
+                        postfix: " carats",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_3").ionRangeSlider({
+                        min: -50,
+                        max: 50,
+                        from: 0,
+                        postfix: "°",
+                        prettify: false,
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_4").ionRangeSlider({
+                        values: [
+                            "January", "February", "March",
+                            "April", "May", "June",
+                            "July", "August", "September",
+                            "October", "November", "December"
+                        ],
+                        type: 'single',
+                        hasGrid: true
+                    });
+
+                    $("#ionrange_5").ionRangeSlider({
+                        min: 10000,
+                        max: 100000,
+                        step: 100,
+                        postfix: " km",
+                        from: 55000,
+                        hideMinMax: true,
+                        hideFromTo: false
+                    });
+
+                    $(".dial").knob();
+
+                    $("#basic_slider").noUiSlider({
+                        start: 40,
+                        behaviour: 'tap',
+                        connect: 'upper',
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#range_slider").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+
+                    $("#drag-fixed").noUiSlider({
+                        start: [40, 60],
+                        behaviour: 'drag-fixed',
+                        connect: true,
+                        range: {
+                            'min': 20,
+                            'max': 80
+                        }
+                    });
+    </script>
+}

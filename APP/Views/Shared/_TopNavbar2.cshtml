@@ -1,0 +1,218 @@
+﻿@using APP.Models
+@using DAL;
+@using System.Linq;
+@using System.Web;
+@{
+    KontrolParkEntities db = new KontrolParkEntities();
+    UserViewModel model = new UserViewModel();
+
+    HttpCookie zCookie = Request.Cookies["ident"];
+    string name = Server.HtmlEncode(zCookie.Value);
+    Utilisateur actif = db.Utilisateur.Single(p => p.Identifiant == name);
+}
+<div class="row border-bottom fc-bg">
+    <nav class="navbar navbar-static-top" role="navigation">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                <i class="fa fa-reorder"></i>
+            </button>
+            <a href="/Home/Index" class="navbar-brand">KONTROL PARK</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar">
+            <ul class="nav navbar-nav">
+                @{
+                    if (actif.IdProfil == 7)
+                    {
+                        <li class="">
+                            <a aria-expanded="false" role="button" href="/Affectation/Missions/Index">
+                                <i class="fa fa-tasks"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Mission </span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="/Garage/Intervention/Index">
+                                <i class="fa fa-cogs"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Intervention </span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-magic"></i>
+                                Opération
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Garage/Operation/IndexCarb">Opération sur les Carburants  </a></li>
+                                <li><a href="/Garage/Operation/IndexHuil">Opération sur les Huiles </a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if(actif.IdProfil == 6)
+                    {
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-users"></i>
+                                Personnels
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Affectation/Conducteurs/Index">Conducteur  </a></li>
+                                <li><a href="/Garage/Mecanicien/Index">Mécanicien</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-flask"></i>
+                                Paramètre
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Affectation/Index/IndexVehicule">Vehicules</a></li>
+
+                                <li><a href="/Affectation/TypeCarburants/Index">Type de Carburants</a></li>
+                                <li><a href="/Garage/Carburants/Index">Carburants</a></li>
+                                <li><a href="/Garage/Huiles/Index">Huiles</a></li>
+
+                                <li><a href="/Garage/Pieces/Index">Pièces</a></li>
+                                <li><a href="/Garage/TypeInterventions/Index">Types d'intervention</a></li>
+
+                                <li><a href="/Affectation/CategoriePermis/Index">Catégories de Permis de conduire</a></li>
+
+                                <li><a href="/Affectation/CategorieMissions/Index">Catégories de mission</a></li>
+                                <li><a href="/Affectation/TypeMissions/Index">Types de mission</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                                Administration
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Administraton/Admin/Index">Utilisateur </a></li>
+                                <li><a href="/Administraton/Security/Index">Sécurité </a></li>
+                                <li><a href="/Administraton/Journal/Index">Journal </a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if (actif.IdProfil == 8)
+                    {
+                        <li class="">
+                            <a href="/Administraton/Suivi/Index">
+                                <i class="fa fa-line-chart"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Suivi </span>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="">
+                            <a aria-expanded="false" role="button" href="/Affectation/Missions/Index">
+                                <i class="fa fa-tasks"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Mission </span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="/Garage/Intervention/Index">
+                                <i class="fa fa-cogs"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Intervention </span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-magic"></i>
+                                Opération
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Garage/Operation/IndexCarb">Opération sur les Carburants  </a></li>
+                                <li><a href="/Garage/Operation/IndexHuil">Opération sur les Huiles </a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-users"></i>
+                                Personnels
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Affectation/Conducteurs/Index">Conducteur  </a></li>
+                                <li><a href="/Garage/Mecanicien/Index">Mécanicien</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-flask"></i>
+                                Paramètre
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Affectation/Index/IndexVehicule">Vehicules</a></li>
+
+                                <li><a href="/Affectation/TypeCarburants/Index">Type de Carburants</a></li>
+                                <li><a href="/Garage/Carburants/Index">Carburants</a></li>
+                                <li><a href="/Garage/Huiles/Index">Huiles</a></li>
+
+                                <li><a href="/Garage/Pieces/Index">Pièces</a></li>
+                                <li><a href="/Garage/TypeInterventions/Index">Types d'intervention</a></li>
+
+                                <li><a href="/Affectation/CategoriePermis/Index">Catégories de Permis de conduire</a></li>
+
+                                <li><a href="/Affectation/CategorieMissions/Index">Catégories de mission</a></li>
+                                <li><a href="/Affectation/TypeMissions/Index">Types de mission</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-dashboard"></i>
+                                Administration
+                                <span class="caret"></span>
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Administraton/Admin/Index">Utilisateur </a></li>
+                                <li><a href="/Administraton/Security/Index">Sécurité </a></li>
+                                <li><a href="/Administraton/Journal/Index">Journal </a></li>
+                            </ul>
+                        </li>
+                        <li class="">
+                            <a href="/Administraton/Suivi/Index">
+                                <i class="fa fa-line-chart"></i>
+                                <span class="nav-label" data-i18n="nav.animations">Suivi </span>
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+            <ul class="nav navbar-top-links navbar-right">
+                @*<li>
+                    <a href="#">
+                        <i class="fa fa-sign-out"></i> Log out
+                    </a>
+                </li>*@
+                <li class="dropdown">
+                    @{
+                        if (Request.Cookies["userName"] != null)
+                        {
+                            HttpCookie aCookie = Request.Cookies["userName"];
+                            HttpCookie bCookie = Request.Cookies["usersurname"];
+                            HttpCookie cCookie = Request.Cookies["profil"];
+                            <a aria-expanded="false" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                @*<span class="clear">
+                                    <span class="block m-t-xs">*@
+                                        <strong class="font-bold">@Server.HtmlEncode(aCookie.Value) @Server.HtmlEncode(bCookie.Value)@*, @Server.HtmlEncode(cCookie.Value)*@</strong>
+                                        <b class="caret"></b>
+                                    @*</span> 
+                                </span>*@
+                            </a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="/Utilisateur/Index">Paramètre</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/Login/Deconnexion">Logout</a></li>
+                            </ul>
+                        }
+                    }
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
